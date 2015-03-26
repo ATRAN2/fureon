@@ -9,13 +9,11 @@ from tests import testing_utils
 
 
 class TestSongModel(unittest.TestCase, testing_utils.CustomFileAssertions):
-    def setUp(cls):
-        cls.test_song_path = os.path.join(
+    def setUp(self):
+        self.test_song_path = os.path.join(
             config.PARENT_DIRECTORY, 'tests', 'test_files', 'test_song.mp3'
         )
-        engine = db_operations.connect_to_in_memory_db()
-        db_operations.create_tables(engine)
-        db_operations.bind_session(engine)
+        testing_utils.connect_to_temporary_test_db()
 
     def test_add_new_song(self):
         art_path = os.path.join(testing_utils.TEST_TEMP_PATH, 'test_art.jpg')
@@ -26,22 +24,21 @@ class TestSongModel(unittest.TestCase, testing_utils.CustomFileAssertions):
             'title' : u'test_title',
             'artist' : u'test_artist',
             'album' : u'test_album',
-            'trackno' : 1,
-            'year' : 2014,
+            'trackno' : u'1',
+            'date' : u'2014',
             'genre' : u'test_genre',
-            'duration' : 184,
+            'duration' : u'184.32',
             'file_path' : unicode(self.test_song_path),
             'art_path' : unicode(art_path),
-            'extra' : None,
+            'tags' : None,
             'play_count' : 0,
             'fave_count' : 0
         }
         with db_operations.session_scope() as session:
             added_song =  session.query(song.SongModel).filter_by(id=1).first()
             added_song_contents = convert_row_to_map(added_song)
-            self.maxDiff = None
-            datetime_added = added_song_contents.pop('datetime_added')
-            self.assertEqual(datetime.datetime, type(datetime_added))
+            added_song_datetime = added_song_contents.pop('datetime_added')
+            self.assertEqual(datetime.datetime, type(added_song_datetime))
             self.assertEqual(expected_row, added_song_contents)
 
     def tearDown(self):

@@ -2,7 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
 import config
-from afkradio.models.base import Base
+from fureon.models.base import Base
 
 
 class Playlist(Base):

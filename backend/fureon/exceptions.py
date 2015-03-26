@@ -1,18 +1,14 @@
-import logging
+from fureon import config
+from fureon.utils.logger import main_logger
 
-
-logging.basicConfig(level=100)
 
 class FileNotFoundError(Exception):
-    def __init__(self, message):
+    def __init__(self, message='', logger=main_logger):
         super(FileNotFoundError, self).__init__(message)
-        logging.warning('FileNotFoundError {0}'.format(message))
-        pass
+        logger.warning('FileNotFoundError: {0}'.format(message))
 
 class FileTypeError(Exception):
-    def __init__(self, message):
+    def __init__(self, message='', logger=main_logger):
         super(FileTypeError, self).__init__(message)
-        logging.warning('FileTypeError {0}'.format(message))
+        logger.warning('FileTypeError: {0}'.format(message))
         self.message = message
-        pass
-

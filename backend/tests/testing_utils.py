@@ -2,24 +2,17 @@ import os
 import subprocess
 import unittest
 import shutil
+import imghdr
 
-from fureon import config
+from fureon import config, db_operations
 
 
 TEST_TEMP_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_temp')
+TEST_FILES_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_files')
 
 class CustomFileAssertions(object):
     def assertIsImage(self, image_path):
-        image_check_proc = subprocess.Popen(
-            [config.paths['metadata_extractor'], image_path],
-            stderr = subprocess.STDOUT,
-            stdout = subprocess.PIPE
-        )
-        is_image = False
-        for line in iter(image_check_proc.stdout.readline, ''):
-            if line.find('image/'):
-                is_image = True
-        if not is_image:
+        if not imghdr.what(image_path):
             raise AssertionError('File in path is not an image: {0}'.format(image_path))
 
     def assertFileExists(self, path):
@@ -35,6 +28,11 @@ class CustomFileAssertions(object):
             return True
         else:
             return False
+
+def connect_to_temporary_test_db():
+    engine = db_operations.connect_to_in_memory_db()
+    db_operations.create_tables(engine)
+    db_operations.bind_session(engine)
 
 def empty_temp_directory():
     for file in os.listdir(TEST_TEMP_PATH):

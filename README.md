@@ -9,7 +9,7 @@ exiftool
 
 Install and set up mpd/mpc to work as a source for icecast2.  Here's a [concise guide](https://www.cupfighter.net/2013/11/building-your-own-radio-station-with-mpd-mpc-and-icecast2-on-debian) on how to set up mpd/mpc to stream with icecast2.
 
-As for exiftool, it simply needs to be extracted to an exectuable location.  I recommend ./backend/fureon/ext_apps/exiftool/
+As for exiftool, it simply needs to be extracted to an exectuable location.  I recommend ./backend/ext_apps/exiftool/
 
 Implementation
 ---
