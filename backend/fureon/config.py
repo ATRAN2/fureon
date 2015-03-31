@@ -6,7 +6,7 @@ PARENT_DIRECTORY = os.path.normpath(APP_ROOT + os.sep + os.pardir)
 
 # Set paths and database parameters prior to use
 paths = {
-    'mpd_db_root' : '',
+    'song_directory' : '',
     'static_folder_path' : '',
     'log_file' : os.path.join(PARENT_DIRECTORY, 'fureon.log')
     }

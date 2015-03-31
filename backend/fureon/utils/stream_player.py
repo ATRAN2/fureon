@@ -1,45 +1,48 @@
 import subprocess
 
+from fureon import config
 
-NULL_DEVICE = '/dev/null'
+
 class StreamPlayer(object):
-    @staticmethod
-    def send_command(command, response=None):
-        proc = subprocess.Popen(['mpc', command], stdout=NULL_DEVICE)
+    DEFAULT_NULL_DEVICE = '/dev/null'
+    
+    def __init__(self, null_device=DEFAULT_NULL_DEVICE):
+        self.null_device = null_device
+
+    def send_command(self, command, response=None):
+        full_command = ['mpc'] + command
+        proc = subprocess.Popen(full_command, stdout=self.null_device).wait()
         return response
 
-    @staticmethod
-    def currently_playing():
-        proc = subprocess.Popen(['mpc'], stdout=NULL_DEVICE)
-        line = proc.stdout.readline():
-            if line.startswith('volume: n/a'):
-                return 'No song is currently playing'
-            else:
-                return line.decode('utf-8')
+    def currently_playing(self):
+        proc = subprocess.Popen(['mpc'], stdout=subprocess.PIPE)
+        line = proc.stdout.readline()
+        if line.startswith('volume: n/a'):
+            return 'No song is currently playing'
+        else:
+            return line.decode('utf-8')
 
-    @staticmethod
-    def play():
-        return send_command('play', 'Played player')
+    def play(self):
+        return self.send_command(['play'], respone='Played player')
 
-    @staticmethod
-    def stop():
-        return send_command('stop', 'Stopped player')
+    def stop(self):
+        return self.send_command(['stop'], response='Stopped player')
 
-    @staticmethod
-    def clear():
-        return send_command('clear', 'Cleared player playlist')
+    def clear(self):
+        return self.send_command(['clear'], response='Cleared player playlist')
 
-    @staticmethod
-    def crop():
-        return send_command('crop', 'Cleared player playlist except currently playing song')
+    def crop(self):
+        return self.send_command(['crop'], response='Cleared player playlist except currently playing song')
 
-    @staticmethod
-    def add(song_path):
+    def add(self, song_path):
         response_message = 'Added {0} to the playlist'.format(song_path)
-        return send_command('add', response_message)
+        relative_song_path = self._get_relative_mpd_song_path(song_path)
+        return self.send_command(['add', relative_song_path], response=response_message)
 
-    @staticmethod
-    def remove(song_position=1)
+    def remove(self, song_position=1):
         response_message = 'Removed the song in position {0} of the playlist'.format(str(song_position))
-        return send_command('del', response_message)
+        return self.send_command(['del', song_position], response=response_message)
+
+    def _get_relative_mpd_song_path(self, absolute_song_path):
+        return os.path.relpath(absolute_song_path, config.paths['song_directory'])
 

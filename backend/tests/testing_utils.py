@@ -1,6 +1,5 @@
 import os
 import subprocess
-import unittest
 import shutil
 import imghdr
 
@@ -9,6 +8,11 @@ from fureon import config, db_operations
 
 TEST_TEMP_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_temp')
 TEST_FILES_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_files')
+MOCK_CONFIG_PATHS = {
+    'song_directory' : TEST_FILES_PATH,
+    'static_folder_path' : TEST_TEMP_PATH,
+    'log_file' : TEST_TEMP_PATH
+}
 
 class CustomFileAssertions(object):
     def assertIsImage(self, image_path):

@@ -1,11 +1,14 @@
 import tornado.ioloop
 from tornado.options import define, options, parse_command_line
 
+from fureon import site_controls
 from fureon.web import api_handlers
 
 
 define('port', default=8888, help='determines what port to run the application on', type=int)
 define('debug', default=False, help='set to True to run in debug mode')
+
+main_stream_controller = site_controls.MainStreamControls()
 
 def main():
     parse_command_line()

@@ -1,14 +1,17 @@
 import os
-import unittest
 import subprocess
 
+import pytest
+import mock
+
+from fureon import config
 from fureon.utils import song_metadata_extractor
 from fureon.exceptions import FileNotFoundError, FileTypeError
 from tests import testing_utils
 
 
-class TestSongMetadataExtractor(unittest.TestCase, testing_utils.CustomFileAssertions):
-    def setUp(self):
+class TestSongMetadataExtractor(testing_utils.CustomFileAssertions):
+    def setup_method(self, method):
         self.extractor = song_metadata_extractor.SongMetadataExtractor()
 
     def test_extract_metadata_from_mp3(self):
@@ -63,9 +66,10 @@ class TestSongMetadataExtractor(unittest.TestCase, testing_utils.CustomFileAsser
         )
 
     def _test_extract_metadata_from_song(self, expected_metadata, song_path, check_picture=True):
-        song_metadata = self.extractor.extract_metadata_from_song(song_path)
+        with mock.patch.object(config, 'paths', testing_utils.MOCK_CONFIG_PATHS):
+            song_metadata = self.extractor.extract_metadata_from_song(song_path)
         song_art = song_metadata.pop('picture_data')
-        self.assertEqual(expected_metadata, song_metadata)
+        assert expected_metadata == song_metadata
         if check_picture:
             art_file_path = os.path.join(testing_utils.TEST_TEMP_PATH, 'test_art.jpg')
             with open(art_file_path, 'wb') as image_out:
@@ -75,14 +79,14 @@ class TestSongMetadataExtractor(unittest.TestCase, testing_utils.CustomFileAsser
             self.assertFileDoesNotExist(art_file_path)
 
     def test_extract_metadata_from_nonexistent_file(self):
-        with self.assertRaises(FileNotFoundError):
+        with pytest.raises(FileNotFoundError):
             self.extractor.extract_metadata_from_song('/not/a/valid/song/path')
 
     def test_extract_metadata_from_invalid_file_type(self):
         song_with_unsupported_filetype = os.path.join(
             testing_utils.TEST_FILES_PATH, 'more_songs', 'test_song4.mid'
         )
-        with self.assertRaises(FileTypeError):
+        with pytest.raises(FileTypeError):
             self.extractor.extract_metadata_from_song(song_with_unsupported_filetype)
 
 if __name__ == '__main__':
