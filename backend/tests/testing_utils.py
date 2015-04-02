@@ -3,11 +3,16 @@ import subprocess
 import shutil
 import imghdr
 
-from fureon import config, db_operations
+import mock
+
+from fureon import config, db_operations, site_controls
+from fureon.utils import cache
 
 
 TEST_TEMP_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_temp')
 TEST_FILES_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_files')
+TEST_SONG_CACHE = cache.SongCache(host='localhost', port=6379, db=9)
+
 MOCK_CONFIG_PATHS = {
     'song_directory' : TEST_FILES_PATH,
     'static_folder_path' : TEST_TEMP_PATH,
@@ -32,6 +37,24 @@ class CustomFileAssertions(object):
             return True
         else:
             return False
+
+class TestingWithDBBaseClass(object):
+    @classmethod
+    def setup_class(cls):
+        cls._song_cache = TEST_SONG_CACHE
+        cls._stream_controller = site_controls.MainStreamControls(cls._song_cache)
+
+    @classmethod
+    def teardown_class(cls):
+        cls._song_cache.flush_db()
+
+    def setup_method(self, method):
+        connect_to_temporary_test_db()
+        with mock.patch.object(config, 'paths', MOCK_CONFIG_PATHS):
+            self._stream_controller._database_controller.update_song_db()
+
+    def teardown_method(self, method):
+        empty_temp_directory()
 
 def connect_to_temporary_test_db():
     engine = db_operations.connect_to_in_memory_db()

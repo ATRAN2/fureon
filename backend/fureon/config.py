@@ -20,9 +20,22 @@ database = {
     'database' : '',
 }
 
+# Redis cache connection parameters
+cache = {
+    'host' : 'localhost',
+    'port' : 6379,
+}
+
+# Request cooldown in minutes
+stream_options = {
+    'song_request_cooldown' : 60,
+    'playlist_size' : 20
+}
+
 # Set log verbosity. Verbosity in ascending order:
 # CRITICAL, ERROR, WARNING, INFO, DEBUG
 logs = {
     'console_verbosity' : 'ERROR',
     'log_file_verbosity' : 'INFO',
 }
+

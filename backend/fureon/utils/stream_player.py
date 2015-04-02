@@ -1,17 +1,14 @@
+import os
 import subprocess
 
 from fureon import config
 
 
 class StreamPlayer(object):
-    DEFAULT_NULL_DEVICE = '/dev/null'
-    
-    def __init__(self, null_device=DEFAULT_NULL_DEVICE):
-        self.null_device = null_device
-
     def send_command(self, command, response=None):
         full_command = ['mpc'] + command
-        proc = subprocess.Popen(full_command, stdout=self.null_device).wait()
+        with open(os.devnull, 'w') as null_device:
+            proc = subprocess.Popen(full_command, stdout=null_device).wait()
         return response
 
     def currently_playing(self):
@@ -33,6 +30,9 @@ class StreamPlayer(object):
 
     def crop(self):
         return self.send_command(['crop'], response='Cleared player playlist except currently playing song')
+
+    def update(self):
+        return self.send_command(['update'], response='Updated mpd song database')
 
     def add(self, song_path):
         response_message = 'Added {0} to the playlist'.format(song_path)
