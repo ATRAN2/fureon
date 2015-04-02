@@ -76,7 +76,7 @@ class TestPlaylist(object):
         expected_song_ids = [2, 4, 1, 3]
         expected_requested_state = [True, True, False, False]
         for ii in range(len(expected_song_ids)):
-            expected_playlist[ii] = {
+            expected_playlist[unicode(ii)] = {
                 'song_id' : expected_song_ids[ii],
                 'user_requested' : expected_requested_state[ii]
             }
@@ -90,7 +90,7 @@ class TestPlaylist(object):
         expected_song_ids.pop(0)
         expected_requested_state.pop(0)
         for ii in range(len(expected_song_ids)):
-            expected_playlist[ii] = {
+            expected_playlist[unicode(ii)] = {
                 'song_id' : expected_song_ids[ii],
                 'user_requested' : expected_requested_state[ii]
             }

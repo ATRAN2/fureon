@@ -54,9 +54,9 @@ class PlaylistManager(ModelManager):
         ordered_playlist = self.format_query_rows_to_dict(ordered_playlist)
         columns_to_remove = ['datetime_added', 'id', 'currently_playing']
         self.remove_columns_from_query_rows(columns_to_remove, ordered_playlist)
-        if as_list:
-            return ordered_playlist
-        return self.format_list_to_numbered_dict(ordered_playlist)
+        if not as_list:
+            ordered_playlist = self.format_list_to_numbered_dict(ordered_playlist)
+        return ordered_playlist
 
     def _get_ordered_playlist_query(self):
         playlist = self._get_playlist()

@@ -57,7 +57,7 @@ class TestingWithDBBaseClass(object):
         empty_temp_directory()
 
 def connect_to_temporary_test_db():
-    engine = db_operations.connect_to_in_memory_db()
+    engine = db_operations.create_in_memory_engine()
     db_operations.create_tables(engine)
     db_operations.bind_session(engine)
 

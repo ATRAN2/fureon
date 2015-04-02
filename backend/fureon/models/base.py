@@ -11,7 +11,7 @@ class ModelManager(object):
         numbered_dict = {}
         entry_count = start_count
         for entry in input_list:
-            numbered_dict[entry_count] = entry
+            numbered_dict[unicode(entry_count)] = entry
             entry_count += 1
         return numbered_dict
 

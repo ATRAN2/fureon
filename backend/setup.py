@@ -16,6 +16,7 @@ setup(name = 'fureon',
         'sqlalchemy',
         'mutagen',
         'pytest',
+        'pytest-cov'
         'redis',
     ],
     entry_points = {

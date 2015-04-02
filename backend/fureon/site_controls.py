@@ -6,10 +6,11 @@ from fureon.utils import stream_player, cache
 from fureon.models import song, stream_playlist
 from fureon.exceptions import DuplicateEntryError
 from fureon.components.decorators import invalidate_cached_playlist
+from fureon.components.mixins import SingletonMixin
 from fureon.components.stream_watcher import StreamPlayerWatcher
 
 
-class MainStreamControls(object):
+class MainStreamControls(SingletonMixin):
     def __init__(self, song_cache):
         if isinstance(song_cache, cache.SongCache):
             self._song_cache = song_cache
@@ -72,7 +73,7 @@ class MainStreamControls(object):
                 random_song.id, user_requested
             )
 
-    @invalidate_cached_playlist
+    @invalidate_cached_playlist('_song_cache')
     def add_song_with_user_request_to_playlist(self, song_id, user_requested=False):
         with db_operations.session_scope() as session:
             playlist_maanger = stream_playlist.PlaylistManager(session)

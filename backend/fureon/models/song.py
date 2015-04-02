@@ -56,6 +56,25 @@ class SongManager(ModelManager):
         song = self._session.query(Song).filter_by(id=song_id).one()
         return self.format_query_rows_to_dict(song)
 
+    def get_artist_by_name(self, artist_name):
+        artist_songs = self._session.query(Song).filter_by(artist=artist_name).all()
+        artist_songs = self.format_query_rows_to_dict(artist_songs)
+        columns_to_remove = ['genre', 'duration', 'file_path', 'datetime_added',
+            'tags', 'artist', 'art_path']
+        self.remove_columns_from_query_rows(columns_to_remove, artist_songs)
+        artist_songs = self.format_list_to_numbered_dict(artist_songs)
+        return artist_songs
+       
+
+    def get_album_by_name(self, album_name):
+        album_songs = self._session.query(Song).filter_by(album=album_name).all()
+        album_songs = self.format_query_rows_to_dict(album_songs)
+        columns_to_remove = \
+            ['genre', 'duration', 'file_path', 'datetime_added', 'tags', 'album']
+        self.remove_columns_from_query_rows(columns_to_remove, album_songs)
+        album_songs = self.format_list_to_numbered_dict(album_songs)
+        return album_songs
+
     def get_song_count(self):
         return self._session.query(Song.id).count()
 

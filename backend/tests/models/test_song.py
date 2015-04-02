@@ -54,6 +54,51 @@ class TestSongModel(testing_utils.CustomFileAssertions):
             assert expected_row == added_song
         self.assertIsImage(art_path)
 
+    def test_get_artist_by_name(self):
+        with mock.patch.object(config, 'paths', testing_utils.MOCK_CONFIG_PATHS):
+            with db_operations.session_scope() as session:
+                song_manager = song.SongManager(session)
+                song_manager.add_song_from_path(self.test_song_1_path)
+                artist_name = 'test_artist'
+                artist_data = song_manager.get_artist_by_name(artist_name)
+        art_path = \
+            os.path.join(testing_utils.TEST_TEMP_PATH, 'album-art', '1.jpg')
+        expected_artist_data = {
+            u'0' : {
+                'title' : u'test_title',
+                'id' : 1,
+                'trackno' : u'1',
+                'date' : u'2014',
+                'album' : u'test_album',
+                'fave_count' : 0,
+                'play_count' : 0
+            }
+        }
+        assert expected_artist_data == artist_data
+
+    def test_get_album_by_name(self):
+        with mock.patch.object(config, 'paths', testing_utils.MOCK_CONFIG_PATHS):
+            with db_operations.session_scope() as session:
+                song_manager = song.SongManager(session)
+                song_manager.add_song_from_path(self.test_song_1_path)
+                album_name = 'test_album'
+                album_data = song_manager.get_album_by_name(album_name)
+        art_path = \
+            os.path.join(testing_utils.TEST_TEMP_PATH, 'album-art', '1.jpg')
+        expected_album_data = {
+            u'0' : {
+                'title' : u'test_title',
+                'artist' : u'test_artist',
+                'id' : 1,
+                'trackno' : u'1',
+                'date' : u'2014',
+                'art_path' : unicode(art_path),
+                'fave_count' : 0,
+                'play_count' : 0
+            }
+        }
+        assert expected_album_data == album_data
+
     def test_get_song_count(self):
         test_song_paths = [
             self.test_song_1_path, self.test_song_2_path, self.test_song_3_path

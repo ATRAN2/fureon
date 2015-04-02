@@ -12,9 +12,14 @@ from fureon.models.base import Base
 Session = sessionmaker()
 
 def connect_to_db():
-    return create_engine(URL(**config.database))
+    engine = create_db_engine()
+    create_tables(engine)
+    bind_session(engine)
 
-def connect_to_in_memory_db():
+def create_db_engine():
+    return create_engine(URL(**get_database_config()))
+
+def create_in_memory_engine():
     return create_engine('sqlite://')
 
 def create_tables(engine):
@@ -22,6 +27,13 @@ def create_tables(engine):
 
 def bind_session(engine):
     Session.configure(bind=engine)
+
+def get_database_config():
+    database_config = config.database
+    for key, value in database_config.iteritems():
+        if not value:
+            database_config.pop(key)
+    return database_config
 
 @contextmanager
 def session_scope():

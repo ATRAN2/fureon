@@ -3,6 +3,7 @@ import os
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIRECTORY = os.path.normpath(APP_ROOT + os.sep + os.pardir)
+TIME_FORMAT = '%Y-%m-%d %H-%M-%S'
 
 # Set paths and database parameters prior to use
 paths = {
