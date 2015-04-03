@@ -9,7 +9,7 @@ redis
 
 Install and set up mpd/mpc to work as a source for icecast2.  Here's a [concise guide](https://www.cupfighter.net/2013/11/building-your-own-radio-station-with-mpd-mpc-and-icecast2-on-debian) on how to set up mpd/mpc to stream with icecast2.
 
-redis should typically be available in the repo for most linux distros.
+redis should typically be available in the repos for most linux distros.
 
 After that, the backend can be quickly installed using setuptools with the provided setup.py.  In /backend create and source a virtualenv then execute setup.py with install or develop:
 
@@ -72,17 +72,17 @@ Implementation
 ---
 ### Backend
 
-The Fureon backend runs on [tornado](http://www.tornadoweb.org/en/stable/) + [SQLAlchemy](http://www.sqlalchemy.org/) + [redis](http://redis.io/).  Tornado was chosen for its performance, modularity and light weight, as well as its ease in implementing websockets.  The database is abstracted into models with SQLAlchemy and redis is used as both a cache as well as a means to have a data structure that can expires with time.  Fureon shares the mpd music db directory and can scan the directory while also extracting the metadata with [mutagen](https://pypi.python.org/pypi/mutagen) into the database models.
+The Fureon backend runs on [tornado](http://www.tornadoweb.org/en/stable/) + [SQLAlchemy](http://www.sqlalchemy.org/) + [redis](http://redis.io/).  Tornado was chosen for its performance, modularity and light weight, as well as its ease in implementing websockets.  The database is abstracted into models with SQLAlchemy and redis is used as both a cache as well as a means to have a data structure that can expire with time.  Fureon shares the music db directory of the system's mpd installation and can scan the directory while also extracting the metadata with [mutagen](https://pypi.python.org/pypi/mutagen) into the database models.
 
 Fureon currently handles playing music to the main stream with [mpd](http://www.musicpd.org/) controlled by [mpc](http://www.musicpd.org/clients/mpc/).  The mpd output is used as an [icecast](http://icecast.org/) source to serve listeners.  The app watches any changes to mpd with the mpc idle cli command, and upon events such as a transition to the next song, it adds a callback to the tornado ioloop which signals changes to the fureon db playlist which then sends commands back to mpc to update the mpd playlist keeping both the mpd and fureon db playlists consistent.
 
-Upon starting, most everything in the Fureon backend can be controlled from it's RESTlike API.  This includes searching for songs, getting the current playlist, getting song data, as well as requesting songs.
+Many functions in the Fureon backend can be accessed from it's RESTlike API.  This includes searching for songs, getting the current playlist, getting song data, as well as requesting songs.
 
 ##### 
 
 ### Frontend
 
-Frontend work will be done in cooperation with github user [Rifu](https://github.com/Rifu) working on the [anzu](https://github.com/Rifu/anzu) repo.  Powered by Ember.js, it requests the necessary data from the backend's RESTlike endpoints to build the app UI.  The projects will merge eventually once a final name is settled and a good merging point is reached.
+Frontend work will be done in cooperation with github user [Rifu](https://github.com/Rifu) working on the [anzu](https://github.com/Rifu/anzu) repo.  Powered by Ember.js, it will request the necessary data from the backend's RESTlike endpoints to build the app UI.  The projects will merge eventually once a final name is settled and a good merging point is reached.
 
 Backend API
 ---
@@ -123,7 +123,7 @@ Features to Add / To Do (Priority Highest to Lowest)
 Users should only be able to request a certain amount of times within a timespan. This is to prevent a single user from hijacking the stream with requests.  Implement with redis in the same way the song request blocking works but with the requester's IP instead of song_id.
 
 ##### User Logins
-This is for the user to login in order to mark songs as favorites.  Will require adding a user login model as well as an authentication system.  Tornado has authentication built in and storing passwords will most likely be done with passlib.
+This is for the user to login in order to mark songs as favorites and accessing a favorites page.  Will require adding a user model as well as an authentication system.  Tornado has authentication built in and storing passwords will most likely be done with passlib.
 
 ##### API Request Validation
 Validate the arguments to an API request and return useful error responses if the request is incorrect.
