@@ -7,10 +7,12 @@ import random
 
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import IntegrityError
 
 from fureon import config
 from fureon.utils.song_metadata_extractor import SongMetadataExtractor
 from fureon.models.base import Base, ModelManager
+from fureon.exceptions import DuplicateEntryError
 
 
 module_logger = logging.getLogger(__name__)
@@ -26,7 +28,7 @@ class Song(Base):
     date = Column('date', String, nullable=True)
     genre = Column('genre', String, nullable=True)
     duration = Column('duration', String)
-    file_path = Column('file_path', String)
+    file_path = Column('file_path', String, unique=True)
     art_path = Column('art_path', String, nullable=True)
     datetime_added = Column('datetime_added', DateTime)
     tags = Column('tags', String, nullable=True)
@@ -40,7 +42,12 @@ class SongManager(ModelManager):
         picture_data = metadata.pop('picture_data')
         new_song = Song(**metadata)
         self._session.add(new_song)
-        self._session.flush()
+        try:
+            self._session.flush()
+        except IntegrityError as e:
+            self._session.rollback()
+            raise DuplicateEntryError(e)
+
         art_path = None
         if picture_data:
             picture_extension = \
@@ -50,6 +57,13 @@ class SongManager(ModelManager):
         new_song.datetime_added = datetime.datetime.now()
         new_song.file_path = unicode(song_path)
         new_song.art_path = unicode(art_path)
+
+        try:
+            self._session.commit()
+        except IntegrityError as e:
+            self._session.rollback()
+            raise DuplicateEntryError(e)
+
         return new_song.id
 
     def get_song_by_id(self, song_id):
