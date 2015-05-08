@@ -20,7 +20,7 @@ class StreamPlayer(object):
             return line.decode('utf-8')
 
     def play(self):
-        return self.send_command(['play'], respone='Played player')
+        return self.send_command(['play'], response='Played player')
 
     def stop(self):
         return self.send_command(['stop'], response='Stopped player')
