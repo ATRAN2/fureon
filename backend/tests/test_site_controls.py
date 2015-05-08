@@ -5,11 +5,12 @@ from fureon.models import stream_playlist, song
 from fureon.utils import stream_player, cache
 from tests import testing_utils
 
-
 class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
     @mock.patch('fureon.utils.stream_player.StreamPlayer.update')
     def test_load_song_library(self, mock_stream_player_update):
         with mock.patch.object(config, 'paths', testing_utils.MOCK_CONFIG_PATHS):
+            #FIXME: This doesn't actually do anything, all the songs are
+            # already loaded in the setup_method
             self._stream_controller.load_song_library()
             with db_operations.session_scope() as session:
                 song_manager = song.SongManager(session)

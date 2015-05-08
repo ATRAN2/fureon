@@ -8,6 +8,7 @@ from urlparse import urljoin
 
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import IntegrityError
 
 from fureon import config
 from fureon.exceptions import DuplicateEntryError
@@ -47,6 +48,7 @@ class SongManager(ModelManager):
         new_song = Song(**metadata)
         self._session.add(new_song)
         self._session.flush()
+
         art_path = None
         art_uri = None
         if picture_data:
