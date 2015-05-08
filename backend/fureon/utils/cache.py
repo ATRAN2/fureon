@@ -50,3 +50,9 @@ class SongCache(Cache):
     def _get_song_key_from_id(self, song_id):
         return 'song_expiration_ttl_id:{0}'.format(song_id)
 
+class UserCache(Cache):
+    def __init__(self, host, port, db=1):
+        super(UserCache, self).__init__(host, port, db)
+
+    def set_user_request_block_with_ttl(self, user_ip, ttl_in_minutes):
+        pass

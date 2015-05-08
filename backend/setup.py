@@ -18,6 +18,7 @@ setup(name = 'fureon',
         'pytest',
         'pytest-cov'
         'redis',
+        'psycopg2',
     ],
     entry_points = {
         'console_scripts': [

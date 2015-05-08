@@ -6,7 +6,7 @@ class ExceptionWithLogger(Exception):
     def __init__(self, message, logger, level='warning'):
         super(ExceptionWithLogger, self).__init__(message)
         exception_name = self.__class__.__name__
-        logger_message = '{0}: {1}'.format(exception_name, message)
+        logger_message = u'{0}: {1}'.format(exception_name, message)
         logger_function = getattr(logger, level)
         logger_function(logger_message)
 

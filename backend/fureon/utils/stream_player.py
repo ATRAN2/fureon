@@ -20,7 +20,7 @@ class StreamPlayer(object):
             return line.decode('utf-8')
 
     def play(self):
-        return self.send_command(['play'], respone='Played player')
+        return self.send_command(['play'], response='Played player')
 
     def stop(self):
         return self.send_command(['stop'], response='Stopped player')
@@ -35,12 +35,12 @@ class StreamPlayer(object):
         return self.send_command(['update'], response='Updated mpd song database')
 
     def add(self, song_path):
-        response_message = 'Added {0} to the playlist'.format(song_path)
+        response_message = u'Added {0} to the playlist'.format(song_path)
         relative_song_path = self._get_relative_mpd_song_path(song_path)
         return self.send_command(['add', relative_song_path], response=response_message)
 
     def remove(self, song_position=1):
-        response_message = 'Removed the song in position {0} of the playlist'.format(str(song_position))
+        response_message = u'Removed the song in position {0} of the playlist'.format(str(song_position))
         return self.send_command(['del', song_position], response=response_message)
 
     def _get_relative_mpd_song_path(self, absolute_song_path):
