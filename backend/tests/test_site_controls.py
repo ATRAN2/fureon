@@ -5,12 +5,13 @@ from fureon.models import stream_playlist, song
 from fureon.utils import stream_player, cache
 from tests import testing_utils
 
-
 class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
     @mock.patch('fureon.utils.stream_player.StreamPlayer.update')
     def test_load_song_library(self, mock_stream_player_update):
-        self._stream_controller.load_song_library()
         with mock.patch.object(config, 'paths', testing_utils.MOCK_CONFIG_PATHS):
+            #FIXME: This doesn't actually do anything, all the songs are
+            # already loaded in the setup_method
+            self._stream_controller.load_song_library()
             with db_operations.session_scope() as session:
                 song_manager = song.SongManager(session)
                 assert 3 == song_manager.get_song_count()
@@ -65,7 +66,8 @@ class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
     @mock.patch('fureon.utils.stream_player.StreamPlayer.clear')
     @mock.patch('fureon.utils.stream_player.StreamPlayer.update')
     def test_initialize_stream(self, mock_update, mock_clear, mock_crop,  mock_add, mock_run):
-        self._stream_controller.initialize_stream()
+        with mock.patch.object(config, 'paths', testing_utils.MOCK_CONFIG_PATHS):
+            self._stream_controller.initialize_stream()
         assert True == mock_update.called
         assert True == mock_clear.called
         assert True == mock_crop.called
