@@ -16,6 +16,7 @@ setup(name = 'fureon',
         'sqlalchemy',
         'mutagen',
         'redis',
+        'psycopg2',
     ],
     entry_points = {
         'console_scripts': [

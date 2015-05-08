@@ -8,7 +8,7 @@ from fureon.components.cache_instances import song_cache
 define('port', default=8888, help='determines what port to run the application on', type=int)
 define('debug', default=False, help='set to True to run in debug mode')
 
-main_stream_controller = site_controls.MainStreamControls.instance(song_cache)
+main_stream_controller = site_controls.MainStreamControls(song_cache)
 
 api_endpoints = [
     (r'/api', api_handlers.APIRootHandler),

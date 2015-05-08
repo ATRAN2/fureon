@@ -5,7 +5,6 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
 
 from fureon import config
-from fureon.models import song
 from fureon.models.base import Base
 
 

@@ -11,12 +11,15 @@ from fureon.utils import cache
 
 TEST_TEMP_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_temp')
 TEST_FILES_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_files')
+TEST_STATIC_URI = 'http://my.testurl.com/stuff/'
 TEST_SONG_CACHE = cache.SongCache(host='localhost', port=6379, db=9)
+# TEST_USER_CACHE = cache.SongCache(host='localhost', port=6379, db=10)
 
 MOCK_CONFIG_PATHS = {
     'song_directory' : TEST_FILES_PATH,
     'static_folder_path' : TEST_TEMP_PATH,
-    'log_file' : TEST_TEMP_PATH
+    'static_uri' : TEST_STATIC_URI,
+    'log_file' : TEST_TEMP_PATH,
 }
 
 class CustomFileAssertions(object):

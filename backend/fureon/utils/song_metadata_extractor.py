@@ -44,20 +44,29 @@ class SongMetadataExtractor(object):
 
     def _extract_id3_metadata(self, song_data):
         for id3_field, column_name in self.ID3_TAG_TO_SONG_MODEL_MAP.items():
-            field_value = song_data[id3_field].text[0]
+            if song_data.get(id3_field):
+                field_value = song_data.get(id3_field).text[0]
+            else:
+                field_value = ''
             self._metadata[column_name] = field_value
         self._format_id3_date_field()
         self._format_id3_trackno_field()
+        picture_data = None
         if 'APIC:cover' in song_data:
             picture_data = song_data['APIC:cover'].data
-            self._metadata['picture_data'] = picture_data
+        elif 'APIC:' in song_data:
+            picture_data = song_data['APIC:'].data
+        self._metadata['picture_data'] = picture_data
 
     def _extract_vorbiscomments_metadata(self, song_data):
         for vorbis_field, column_name in self.VORBISCOMMENTS_TO_SONG_MODEL_MAP.items():
-            field_value = song_data[vorbis_field][0]
+            if song_data.get(vorbis_field):
+                field_value = song_data[vorbis_field][0]
+            else:
+                field_value = ''
             self._metadata[column_name] = field_value
         picture_data = None
-        if hasattr(song_data, 'pictures'):
+        if hasattr(song_data, 'pictures') and song_data.pictures:
             picture_data = song_data.pictures[0].data
         elif 'metadata_block_picture' in song_data:
             picture_data = song_data['metadata_block_picture'][0]

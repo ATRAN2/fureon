@@ -29,8 +29,10 @@ class TestSongModel(testing_utils.CustomFileAssertions):
             with db_operations.session_scope() as session:
                 song_manager = song.SongManager(session)
                 new_song_id = song_manager.add_song_from_path(self.test_song_1_path)
+        file_uri = testing_utils.TEST_STATIC_URI + 'music/1.mp3'
         art_path = \
             os.path.join(testing_utils.TEST_TEMP_PATH, 'album-art', '1.jpg')
+        art_uri = testing_utils.TEST_STATIC_URI + 'album-art/1.jpg'
         expected_row = {
             'id' : 1,
             'title' : u'test_title',
@@ -41,10 +43,12 @@ class TestSongModel(testing_utils.CustomFileAssertions):
             'genre' : u'test_genre',
             'duration' : u'184.32',
             'file_path' : unicode(self.test_song_1_path),
+            'file_uri' : unicode(file_uri),
             'art_path' : unicode(art_path),
+            'art_uri' : unicode(art_uri),
             'tags' : None,
             'play_count' : 0,
-            'fave_count' : 0
+            'fave_count' : 0,
         }
         with db_operations.session_scope() as session:
             song_manager = song.SongManager(session)
@@ -61,8 +65,6 @@ class TestSongModel(testing_utils.CustomFileAssertions):
                 song_manager.add_song_from_path(self.test_song_1_path)
                 artist_name = 'test_artist'
                 artist_data = song_manager.get_artist_by_name(artist_name)
-        art_path = \
-            os.path.join(testing_utils.TEST_TEMP_PATH, 'album-art', '1.jpg')
         expected_artist_data = {
             u'0' : {
                 'title' : u'test_title',
@@ -83,8 +85,7 @@ class TestSongModel(testing_utils.CustomFileAssertions):
                 song_manager.add_song_from_path(self.test_song_1_path)
                 album_name = 'test_album'
                 album_data = song_manager.get_album_by_name(album_name)
-        art_path = \
-            os.path.join(testing_utils.TEST_TEMP_PATH, 'album-art', '1.jpg')
+        art_uri = testing_utils.TEST_STATIC_URI + 'album-art/1.jpg'
         expected_album_data = {
             u'0' : {
                 'title' : u'test_title',
@@ -92,7 +93,7 @@ class TestSongModel(testing_utils.CustomFileAssertions):
                 'id' : 1,
                 'trackno' : u'1',
                 'date' : u'2014',
-                'art_path' : unicode(art_path),
+                'art_uri' : unicode(art_uri),
                 'fave_count' : 0,
                 'play_count' : 0
             }

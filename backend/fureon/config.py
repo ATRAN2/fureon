@@ -9,8 +9,9 @@ TIME_FORMAT = '%Y-%m-%d %H-%M-%S'
 paths = {
     'song_directory' : '',
     'static_folder_path' : '',
+    'static_uri' : '',
     'log_file' : os.path.join(PARENT_DIRECTORY, 'fureon.log')
-    }
+}
 
 database = {
     'drivername' : '',
@@ -40,3 +41,7 @@ logs = {
     'log_file_verbosity' : 'INFO',
 }
 
+# IPs that can continuously add requests to songs
+# without waiting for request cooldown
+request_ip_whitelist = set([
+])

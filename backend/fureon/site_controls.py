@@ -10,7 +10,7 @@ from fureon.components.mixins import SingletonMixin
 from fureon.components.stream_watcher import StreamPlayerWatcher
 
 
-class MainStreamControls(SingletonMixin):
+class MainStreamControls(object):
     def __init__(self, song_cache):
         if isinstance(song_cache, cache.SongCache):
             self._song_cache = song_cache

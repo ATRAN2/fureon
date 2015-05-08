@@ -73,11 +73,11 @@ class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
         assert True == mock_crop.called
         assert True == mock_add.called
         assert True == mock_run.called
-
-    @mock.patch('fureon.utils.stream_player.StreamPlayer.play')
-    def test_run_stream(self, mock_play):
-        self._stream_controller.run_stream()
-        assert True == mock_play.called
+#
+#    @mock.patch('fureon.utils.stream_player.StreamPlayer.play')
+#    def test_run_stream(self, mock_play):
+#        self._stream_controller.run_stream()
+#        assert True == mock_play.called
 
 class TestDatabaseControls(object):
     @classmethod
