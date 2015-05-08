@@ -47,11 +47,7 @@ class SongManager(ModelManager):
         picture_data = metadata.pop('picture_data')
         new_song = Song(**metadata)
         self._session.add(new_song)
-        try:
-            self._session.flush()
-        except IntegrityError as e:
-            self._session.rollback()
-            raise DuplicateEntryError(e)
+        self._session.flush()
 
         art_path = None
         art_uri = None
