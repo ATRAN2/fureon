@@ -29,11 +29,7 @@ def bind_session(engine):
     Session.configure(bind=engine)
 
 def get_database_config():
-    database_config = config.database
-    for key, value in database_config.iteritems():
-        if not value:
-            database_config.pop(key)
-    return database_config
+    return {k: v for k, v in config.database.iteritems() if v}
 
 @contextmanager
 def session_scope():
