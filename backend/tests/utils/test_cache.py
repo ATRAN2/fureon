@@ -10,11 +10,10 @@ from tests import testing_utils
 class TestCache(object):
     @classmethod
     def setup_class(cls):
-        cls._cache = testing_utils.TEST_SONG_CACHE
+        cls._cache = testing_utils.create_mock_cache_from_class(cache.Cache)
 
-    @classmethod
-    def teardown_class(cls):
-        cls._cache.flush_db()
+    def teardown_method(self, method):
+        self._cache.flush_db()
 
     def test_set_get_and_delete_key_value(self):
         self._cache.set_key_value('1', '2')
@@ -53,11 +52,10 @@ class TestCache(object):
 class TestSongCache(object):
     @classmethod
     def setup_class(cls):
-        cls._cache = testing_utils.TEST_SONG_CACHE
+        cls._cache = testing_utils.create_mock_cache_from_class(cache.SongCache)
 
-    @classmethod
-    def teardown_class(cls):
-        cls._cache.flush_db()
+    def teardown_method(self, method):
+        self._cache.flush_db()
 
     def test_set_song_request_block_with_ttl(self):
         self._cache.set_song_request_block_with_ttl('1', 3)

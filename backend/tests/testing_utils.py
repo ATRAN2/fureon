@@ -14,9 +14,14 @@ TEST_TEMP_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_temp')
 TEST_FILES_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_files')
 TEST_STATIC_URI = 'http://my.testurl.com/stuff/'
 TEST_STREAM_ENDPOINT = 'http://my.streamendpoint.com:1234/swag.ogg'
-with mock.patch('fureon.utils.cache.redis.StrictRedis', fakeredis.FakeStrictRedis):
-    TEST_SONG_CACHE = cache.SongCache(host='localhost', port=6379, db=9)
-# TEST_USER_CACHE = cache.SongCache(host='localhost', port=6379, db=10)
+
+def create_mock_cache_from_class(cache_class):
+    with mock.patch('fureon.utils.cache.redis.StrictRedis', fakeredis.FakeStrictRedis):
+        mock_cache = cache_class(host='notahost', port=1234, db=0)
+        return mock_cache
+
+TEST_SONG_CACHE = create_mock_cache_from_class(cache.SongCache)
+# TEST_USER_CACHE = create_mock_cache_from_class(cache.UserCache)
 
 MOCK_CONFIG_PATHS = {
     'song_directory' : TEST_FILES_PATH,
@@ -51,9 +56,8 @@ class TestingWithDBBaseClass(object):
         cls._song_cache = TEST_SONG_CACHE
         cls._stream_controller = site_controls.MainStreamControls(cls._song_cache)
 
-    @classmethod
-    def teardown_class(cls):
-        cls._song_cache.flush_db()
+    def teardown_method(self, method):
+        self._song_cache.flush_db()
 
     def setup_method(self, method):
         connect_to_temporary_test_db()
