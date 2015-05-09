@@ -1,6 +1,7 @@
 ENDPOINT_DESCRIPTIONS = {
     u'/api' : u'Returns this description of all api endpoints in JSON format.',
-    u'/api/playlist' : u'Returns the current playlist with the order given as keys. ' +\
+    u'/api/stream_endpoint' : u'Returns the uri for the stream endpoint.',
+    u'/api/playlist' : u'Returns the current playlist with the order given as keys.' +\
         'Includes: song title, song artist, song id, song duration, and whether ' +\
         'the song was user requested or not.',
     u'/api/song/find?song-id=<song_id>' : u'Returns the full details of a single ' +\
