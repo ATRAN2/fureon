@@ -14,6 +14,9 @@ TEST_TEMP_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_temp')
 TEST_FILES_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_files')
 TEST_STATIC_URI = 'http://my.testurl.com/stuff/'
 TEST_STREAM_ENDPOINT = 'http://my.streamendpoint.com:1234/swag.ogg'
+with mock.patch('fureon.utils.cache.redis.StrictRedis', fakeredis.FakeStrictRedis):
+    TEST_SONG_CACHE = cache.SongCache(host='localhost', port=6379, db=9)
+# TEST_USER_CACHE = cache.SongCache(host='localhost', port=6379, db=10)
 
 MOCK_CONFIG_PATHS = {
     'song_directory' : TEST_FILES_PATH,
@@ -22,11 +25,6 @@ MOCK_CONFIG_PATHS = {
     'stream_endpoint' : TEST_STREAM_ENDPOINT,
     'log_file' : TEST_TEMP_PATH,
 }
-
-def create_mock_cache_from_class(cache_class):
-    with mock.patch('fureon.utils.cache.redis.StrictRedis', fakeredis.FakeStrictRedis):
-        mock_cache = cache_class(host='notahost', port=1234, db=0)
-        return mock_cache
 
 class CustomFileAssertions(object):
     def assertIsImage(self, image_path):
@@ -50,7 +48,7 @@ class CustomFileAssertions(object):
 class TestingWithDBBaseClass(object):
     @classmethod
     def setup_class(cls):
-        cls._song_cache = create_mock_cache_from_class(cache.SongCache)
+        cls._song_cache = TEST_SONG_CACHE
         cls._stream_controller = site_controls.MainStreamControls(cls._song_cache)
 
     @classmethod
