@@ -3,6 +3,7 @@ import subprocess
 import shutil
 import imghdr
 
+import fakeredis
 import mock
 
 from fureon import config, db_operations, site_controls
@@ -12,7 +13,8 @@ from fureon.utils import cache
 TEST_TEMP_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_temp')
 TEST_FILES_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_files')
 TEST_STATIC_URI = 'http://my.testurl.com/stuff/'
-TEST_SONG_CACHE = cache.SongCache(host='localhost', port=6379, db=9)
+with mock.patch('fureon.utils.cache.redis.StrictRedis', fakeredis.FakeStrictRedis):
+    TEST_SONG_CACHE = cache.SongCache(host='localhost', port=6379, db=9)
 # TEST_USER_CACHE = cache.SongCache(host='localhost', port=6379, db=10)
 
 MOCK_CONFIG_PATHS = {
