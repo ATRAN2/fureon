@@ -32,7 +32,8 @@ class TestAPIHandlers(AsyncHTTPTestCase, testing_utils.TestingWithDBBaseClass):
         number_of_songs_to_add = 5
         for ii in range(number_of_songs_to_add):
             self._stream_controller.add_random_song_with_user_request_to_playlist()
-        response = self._fetch_response_data_from_url('/api/playlist')
+        with mock.patch('fureon.web.api_handlers.song_cache', testing_utils.TEST_SONG_CACHE):
+            response = self._fetch_response_data_from_url('/api/playlist')
         assert response.code == 200
         json_data = json.loads(response.body)
         assert number_of_songs_to_add == len(json_data)
