@@ -10,7 +10,7 @@ from tests import testing_utils
 class TestCache(object):
     @classmethod
     def setup_class(cls):
-        cls._cache = testing_utils.TEST_SONG_CACHE
+        cls._cache = testing_utils.create_mock_cache_from_class(cache.Cache)
 
     @classmethod
     def teardown_class(cls):
@@ -53,7 +53,7 @@ class TestCache(object):
 class TestSongCache(object):
     @classmethod
     def setup_class(cls):
-        cls._cache = testing_utils.TEST_SONG_CACHE
+        cls._cache = testing_utils.create_mock_cache_from_class(cache.SongCache)
 
     @classmethod
     def teardown_class(cls):

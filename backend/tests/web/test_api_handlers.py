@@ -6,6 +6,7 @@ from urllib import urlencode
 import pytest
 import mock
 import tornado
+import fakeredis
 from tornado.testing import AsyncHTTPTestCase
 
 from fureon import site_controls, db_operations, constants, config
@@ -13,6 +14,7 @@ from fureon.web import api_handlers
 from fureon.models import song
 from fureon.app import api_endpoints
 from fureon.components import cache_instances
+from fureon.utils import cache
 from tests import testing_utils
 
 
@@ -31,7 +33,10 @@ class TestAPIHandlers(AsyncHTTPTestCase, testing_utils.TestingWithDBBaseClass):
 
     def test_playlist_query(self):
         number_of_songs_to_add = 5
-        with mock.patch.object(cache_instances, 'song_cache', testing_utils.TEST_SONG_CACHE):
+        with mock.patch.object(
+            cache_instances, 'song_cache',
+            testing_utils.create_mock_cache_from_class(cache.SongCache)
+        ):
             for ii in range(number_of_songs_to_add):
                 self._stream_controller.add_random_song_with_user_request_to_playlist()
             # Run twice to ensure cache is working correctly
