@@ -10,6 +10,7 @@ paths = {
     'song_directory' : '',
     'static_folder_path' : '',
     'static_uri' : '',
+    'stream_endpoint' : '',
     'log_file' : os.path.join(PARENT_DIRECTORY, 'fureon.log')
 }
 

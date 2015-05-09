@@ -98,6 +98,11 @@ $ /api/playlist
 Returns the current playlist with the order given as keys.  Includes: song title, song artist, song id, song duration, and whether the song was user requested or not.
 
 ```sh
+$ /api/stream_endpoint
+```
+Returns the uri for the stream endpoint.
+
+```sh
 $ /api/song/find?song-id=<song_id>
 ```
 Returns the full details of a single song with the id \<song_id\>.  Data includes (if available): id, title, artist, album, trackno, date, genre, duration, file_path, art_path, datetime_added, tags, play_count, fave_count.

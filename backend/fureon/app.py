@@ -17,6 +17,7 @@ api_endpoints = [
     (r'/api/request_song', api_handlers.RequestSongByIDHandler),
     (r'/api/album/find', api_handlers.FindAlbumByNameHandler),
     (r'/api/artist/find', api_handlers.FindArtistByNameHandler),
+    (r'/api/stream_endpoint', api_handlers.GetStreamEndpointHandler),
 ]
 
 def main():

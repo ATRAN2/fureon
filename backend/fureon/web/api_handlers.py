@@ -71,3 +71,9 @@ class FindArtistByNameHandler(RequestHandler):
             artist_name = song_manager.get_artist_by_name(artist_name)
         self.write(artist_name)
 
+class GetStreamEndpointHandler(RequestHandler):
+    def get(self):
+        stream_endpoint = {
+            'stream_endpoint' : config.paths['stream_endpoint']
+        }
+        self.write(stream_endpoint)
