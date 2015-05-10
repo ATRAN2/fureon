@@ -1,5 +1,4 @@
 import os
-import subprocess
 import shutil
 import imghdr
 
@@ -56,15 +55,13 @@ class TestingWithDBBaseClass(object):
         cls._song_cache = TEST_SONG_CACHE
         cls._stream_controller = site_controls.MainStreamControls(cls._song_cache)
 
-    def teardown_method(self, method):
-        self._song_cache.flush_db()
-
     def setup_method(self, method):
         connect_to_temporary_test_db()
         with mock.patch.object(config, 'paths', MOCK_CONFIG_PATHS):
             self._stream_controller._database_controller.update_song_db()
 
     def teardown_method(self, method):
+        self._song_cache.flush_db()
         empty_temp_directory()
 
 def connect_to_temporary_test_db():

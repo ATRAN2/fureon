@@ -6,8 +6,7 @@ import errno
 import random
 from urlparse import urljoin
 
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime
 
 from fureon import config
 from fureon.exceptions import DuplicateEntryError

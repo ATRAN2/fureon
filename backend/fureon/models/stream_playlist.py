@@ -1,9 +1,7 @@
 import datetime
 
 from sqlalchemy import Column, Integer, Boolean, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 
-from fureon import config
 from fureon.models.base import Base, ModelManager
 
 

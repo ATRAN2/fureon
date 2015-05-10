@@ -1,4 +1,3 @@
-import datetime
 import time
 
 import pytest
@@ -64,7 +63,7 @@ class TestSongCache(object):
 
     def test_get_song_block_ttl(self):
         self._cache.set_song_request_block_with_ttl('1', 3)
-        song_key = self._cache._get_song_key_from_id('1')
+        # song_key = self._cache._get_song_key_from_id('1')
         assert 150L <= self._cache.get_song_block_ttl('1')
     
     def test_get_total_number_of_blocked_songs(self):

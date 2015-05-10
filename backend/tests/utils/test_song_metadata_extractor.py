@@ -1,5 +1,4 @@
 import os
-import subprocess
 
 import pytest
 import mock
@@ -88,6 +87,3 @@ class TestSongMetadataExtractor(testing_utils.CustomFileAssertions):
         )
         with pytest.raises(FileTypeError):
             self.extractor.extract_metadata_from_song(song_with_unsupported_filetype)
-
-if __name__ == '__main__':
-    unittest.main()

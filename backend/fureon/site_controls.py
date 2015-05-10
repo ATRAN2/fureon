@@ -1,12 +1,10 @@
 import os
-import random
 
 from fureon import db_operations, config
 from fureon.utils import stream_player, cache
 from fureon.models import song, stream_playlist
 from fureon.exceptions import DuplicateEntryError
 from fureon.components.decorators import invalidate_cached_playlist
-from fureon.components.mixins import SingletonMixin
 from fureon.components.stream_watcher import StreamPlayerWatcher
 
 
