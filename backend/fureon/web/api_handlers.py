@@ -6,13 +6,16 @@ from fureon import db_operations, constants, config
 from fureon.models import stream_playlist, song
 from fureon.components.cache_instances import song_cache
 
+class CORSRequestHandler(RequestHandler):
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
 
-class APIRootHandler(RequestHandler):
+class APIRootHandler(CORSRequestHandler):
     def get(self):
         endpoints = constants.ENDPOINT_DESCRIPTIONS
         self.write(endpoints)
 
-class PlaylistSongsHandler(RequestHandler):
+class PlaylistSongsHandler(CORSRequestHandler):
     def get(self):
         if song_cache.get_playlist():
             current_playlist = json.loads(song_cache.get_playlist())
@@ -32,7 +35,7 @@ class PlaylistSongsHandler(RequestHandler):
         for field in field_data_to_add:
             playlist_data[field] = song[field]
 
-class FindSongByIDHandler(RequestHandler):
+class FindSongByIDHandler(CORSRequestHandler):
     def get(self):
         song_id = self.request.arguments['song-id'][0]
         with db_operations.session_scope() as session:
@@ -42,7 +45,7 @@ class FindSongByIDHandler(RequestHandler):
                 song_data['datetime_added'].strftime(config.TIME_FORMAT)
         self.write(song_data)
 
-class RequestSongByIDHandler(RequestHandler):
+class RequestSongByIDHandler(CORSRequestHandler):
     def __init__(self, *args, **kwargs):
         super(RequestSongByIDHandler, self).__init__(*args, **kwargs)
         from fureon.app import main_stream_controller
@@ -54,7 +57,7 @@ class RequestSongByIDHandler(RequestHandler):
             song_id, user_requested=True
         )
 
-class FindAlbumByNameHandler(RequestHandler):
+class FindAlbumByNameHandler(CORSRequestHandler):
     def get(self):
         album_name = self.request.arguments['name'][0]
         with db_operations.session_scope() as session:
@@ -62,7 +65,7 @@ class FindAlbumByNameHandler(RequestHandler):
             album_data = song_manager.get_album_by_name(album_name)
         self.write(album_data)
 
-class FindArtistByNameHandler(RequestHandler):
+class FindArtistByNameHandler(CORSRequestHandler):
     def get(self):
         artist_name = self.request.arguments['name'][0]
         with db_operations.session_scope() as session:
@@ -70,7 +73,7 @@ class FindArtistByNameHandler(RequestHandler):
             artist_name = song_manager.get_artist_by_name(artist_name)
         self.write(artist_name)
 
-class GetStreamEndpointHandler(RequestHandler):
+class GetStreamEndpointHandler(CORSRequestHandler):
     def get(self):
         stream_endpoint = {
             'stream_endpoint' : config.paths['stream_endpoint']
