@@ -1,6 +1,5 @@
 import json
 
-from tornado import ioloop
 from tornado.web import RequestHandler
 
 from fureon import db_operations, constants, config

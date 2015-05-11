@@ -2,7 +2,6 @@ import mock
 
 from fureon import db_operations, config, site_controls
 from fureon.models import stream_playlist, song
-from fureon.utils import stream_player, cache
 from tests import testing_utils
 
 
@@ -96,5 +95,3 @@ class TestDatabaseControls(object):
             all_songs = session.query(song.Song).all()
             assert 3 == len(all_songs)
 
-if __name__ == '__main__':
-    unittest.main()

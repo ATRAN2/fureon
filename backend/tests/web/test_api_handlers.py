@@ -1,15 +1,11 @@
 import json
-import os
-import time
 from urllib import urlencode
 
-import pytest
 import mock
 import tornado
 from tornado.testing import AsyncHTTPTestCase
 
-from fureon import site_controls, db_operations, constants, config
-from fureon.web import api_handlers
+from fureon import db_operations, constants, config
 from fureon.models import song
 from fureon.app import api_endpoints
 from tests import testing_utils

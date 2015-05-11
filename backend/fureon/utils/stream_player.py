@@ -8,7 +8,7 @@ class StreamPlayer(object):
     def send_command(self, command, response=None):
         full_command = ['mpc'] + command
         with open(os.devnull, 'w') as null_device:
-            proc = subprocess.Popen(full_command, stdout=null_device).wait()
+            subprocess.Popen(full_command, stdout=null_device).wait()
         return response
 
     def currently_playing(self):

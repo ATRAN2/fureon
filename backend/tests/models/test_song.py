@@ -52,7 +52,7 @@ class TestSongModel(testing_utils.CustomFileAssertions):
         }
         with db_operations.session_scope() as session:
             song_manager = song.SongManager(session)
-            added_song = song_manager.get_song_by_id(1)
+            added_song = song_manager.get_song_by_id(new_song_id)
             added_song_datetime = added_song.pop('datetime_added')
             assert datetime.datetime == type(added_song_datetime)
             assert expected_row == added_song
@@ -141,6 +141,3 @@ class TestSongModel(testing_utils.CustomFileAssertions):
         with db_operations.session_scope() as session:
             song_manager = song.SongManager(session)
             assert expected_song_count == song_manager.get_song_count()
-
-if __name__ == '__main__':
-    unittest.main()

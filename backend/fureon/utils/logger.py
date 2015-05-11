@@ -1,10 +1,11 @@
 import logging
+import os
 
 from fureon import config
 
 
 if not config.paths['log_file']:
-    log_path = os.path.join(PARENT_DIRECTORY, 'fureon.log')
+    log_path = os.path.join(config.PARENT_DIRECTORY, 'fureon.log')
 else:
     log_path = config.paths['log_file']
 

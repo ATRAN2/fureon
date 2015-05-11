@@ -1,8 +1,6 @@
-import subprocess
 import mutagen
 import logging
 
-from fureon import config
 from fureon.exceptions import FileNotFoundError, FileTypeError
 
 

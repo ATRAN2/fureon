@@ -1,7 +1,7 @@
 import tornado
 from tornado.options import define, options, parse_command_line
 
-from fureon import db_operations, site_controls, config
+from fureon import db_operations, site_controls
 from fureon.web import api_handlers
 from fureon.components.cache_instances import song_cache
 

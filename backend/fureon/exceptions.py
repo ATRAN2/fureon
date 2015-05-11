@@ -1,4 +1,3 @@
-from fureon import config
 from fureon.utils.logger import main_logger
 
 
