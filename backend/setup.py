@@ -19,6 +19,7 @@ setup(name = 'fureon',
         'redis',
         'passlib',
         'psycopg2',
+        'itsdangerous',
     ],
     entry_points = {
         'console_scripts': [

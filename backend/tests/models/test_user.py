@@ -1,7 +1,5 @@
-from hashlib import sha256
-import hmac
+from itsdangerous import URLSafeTimedSerializer
 
-import mock
 import pytest
 
 from fureon import db_operations
@@ -124,25 +122,23 @@ class TestUserModel(object):
         assert self.user_manager.auth_user("bad", "test_password") is False
         assert self.user_manager.auth_user("test_username", "bad") is False
 
-    @mock.patch('fureon.models.user.hmac.new', wraps=hmac.new)
-    def test_generate_token(self, hmac_new):
+    def test_generate_token(self):
         test_user = self.user_manager.find_by_username("test_username")
+        test_user_token = self.user_manager.generate_token(test_user)
 
-        self.user_manager.generate_token(test_user)
-        test_user_token = self.user_manager._session.query(user.Token).one()
-
-        assert test_user.tokens[0] == test_user_token
-
-        hmac_new.assert_called_once_with(SECRET_KEY,
-                                         test_user.username +
-                                         str(test_user_token.created_on),
-                                         sha256)
+        serializer = URLSafeTimedSerializer(SECRET_KEY)
+        assert serializer.loads(test_user_token) == test_user.id
 
     def test_validate_token(self):
         test_user = self.user_manager.find_by_username("test_username")
         other_user = self.user_manager.register_user("other_username", "pass")
         token = self.user_manager.generate_token(test_user)
+        other_token = self.user_manager.generate_token(other_user)
 
-        assert self.user_manager.validate_token(test_user, token) is True
-        assert self.user_manager.validate_token(other_user, token) is False
-        assert self.user_manager.validate_token(test_user, "nope") is False
+        serializer = URLSafeTimedSerializer(SECRET_KEY)
+        too_big = serializer.dumps(99999999)
+
+        assert self.user_manager.validate_token(token) == test_user
+        assert self.user_manager.validate_token(other_token) == other_user
+        assert self.user_manager.validate_token("NotAToken") is None
+        assert self.user_manager.validate_token(too_big) is None
