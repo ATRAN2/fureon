@@ -21,3 +21,18 @@ class DuplicateEntryError(ExceptionWithLogger):
     def __init__(self, message='', logger=main_logger, level='info'):
         super(DuplicateEntryError, self).__init__(message, logger, level)
 
+class InvalidUsernameError(ExceptionWithLogger):
+    def __init__(self, message='', logger=main_logger):
+        super(InvalidUsernameError, self).__init__(message, logger)
+
+class InvalidEmailError(ExceptionWithLogger):
+    def __init__(self, message='', logger=main_logger):
+        super(InvalidEmailError, self).__init__(message, logger)
+
+class DuplicateUsernameError(ExceptionWithLogger):
+    def __init__(self, message='', logger=main_logger):
+        super(DuplicateUsernameError, self).__init__(message, logger)
+
+class DuplicateEmailError(ExceptionWithLogger):
+    def __init__(self, message='', logger=main_logger):
+        super(DuplicateEmailError, self).__init__(message, logger)
