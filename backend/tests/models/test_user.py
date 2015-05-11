@@ -1,13 +1,14 @@
 from hashlib import sha256
+import hmac
 
 import mock
 import pytest
 
 from fureon import db_operations
-from fureon.config import SECRET_TOKEN
+from fureon.config import SECRET_KEY
 from fureon.exceptions import InvalidUsernameError, InvalidEmailError, \
                               DuplicateUsernameError, DuplicateEmailError
-from fureon.models import user, token
+from fureon.models import user
 from tests import testing_utils
 
 
@@ -31,10 +32,16 @@ class TestUserModel(object):
 
     def test_user_count(self):
         assert 1 == self.user_manager.get_user_count()
-        test_users = [user.User('test_user'+i, 'p') for i in range(100)]
+        test_users = [user.User('test_user'+str(i), 'p') for i in range(5)]
         self.session.add_all(test_users)
         self.session.commit()
-        assert 101 == self.user_manager.get_user_count()
+        assert 1+5 == self.user_manager.get_user_count()
+
+    def test_find_by_username(self):
+        test_user = self.user_manager.find_by_username("test_username")
+        assert test_user.email == "test_email@example.com"
+
+        assert self.user_manager.find_by_username("nope") is None
 
     def test_register_user(self):
         assert 1 == self.user_manager.get_user_count()
@@ -42,7 +49,7 @@ class TestUserModel(object):
         self.user_manager.register_user("other_username", "other_password",
                                         "other_email@email.com")
         assert 2 == self.user_manager.get_user_count()
-        new_user = self.user_manager.find_by_username("other_username").first()
+        new_user = self.user_manager.find_by_username("other_username")
         assert new_user.email == "other_email@email.com"
 
         self.user_manager.register_user("third_username", "third_password",
@@ -53,10 +60,9 @@ class TestUserModel(object):
         assert 1 == self.user_manager.get_user_count()
 
         self.user_manager.register_user("other_username", "other_password")
-        assert 2 == self.user_manager.get_user_count(), \
-                    "Failed to register user without a email"
+        assert 2 == self.user_manager.get_user_count()
 
-        new_user = self.user_manager.find_by_username("other_username").first()
+        new_user = self.user_manager.find_by_username("other_username")
 
         assert new_user.email is None
 
@@ -113,18 +119,17 @@ class TestUserModel(object):
                                             "other_email@email.com")
         assert 2 == self.user_manager.get_user_count()
 
-    @mock.patch('fureon.models.user.hmac.new')
+    @mock.patch('fureon.models.user.hmac.new', wraps=hmac.new)
     def test_generate_token(self, hmac_new):
-        test_user = user.User.query.first()
+        test_user = self.user_manager.find_by_username("test_username")
 
         self.user_manager.generate_token(test_user)
-        test_user_token = token.Token.query.first()
+        test_user_token = self.user_manager._session.query(user.Token).one()
         
         assert test_user.tokens[0] == test_user_token
 
-        hmac_new.assert_called_once_with(SECRET_TOKEN,
+        hmac_new.assert_called_once_with(SECRET_KEY,
                                          test_user.username +
-                                         test_user_token.datetime_added +
-                                         sha256(SECRET_TOKEN).digest(),
+                                         str(test_user_token.created_on),
                                          sha256)
 
