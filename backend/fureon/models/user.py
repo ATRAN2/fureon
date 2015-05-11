@@ -1,11 +1,9 @@
-import datetime
-import hashlib
-import hmac
 import logging
 import re
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import validates
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy_utils import PasswordType
 
@@ -24,7 +22,6 @@ class User(Base):
     username = Column('username', String, unique=True)
     password = Column(PasswordType(schemes=['pbkdf2_sha512']))
     email = Column('email', String, nullable=True)
-    tokens = relationship("Token", backref="user")
 
     def __init__(self, username, password, email=None):
         self.username = username
@@ -43,24 +40,10 @@ class User(Base):
             raise InvalidEmailError
         return email
 
-class Token(Base):
-    __tablename__ = 'token'
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    value = Column('value', String)
-    created_on = Column(DateTime)
-
-    def __init__(self, user):
-        self.user = user
-        self.created_on = datetime.datetime.now()
-        self.value = hmac.new(
-                 config.SECRET_KEY,
-                 self.user.username + str(self.created_on),
-                 hashlib.sha256).hexdigest()
-
 
 class UserManager(ModelManager):
+    _serializer = URLSafeTimedSerializer(config.SECRET_KEY)
+
     def register_user(self, username, password, email=None):
         if self.find_by_username(username):
             raise DuplicateUsernameError
@@ -90,25 +73,14 @@ class UserManager(ModelManager):
             return None
 
     def generate_token(self, user):
-        new_token = Token(user)
-        self._session.add(new_token)
-        self._session.commit()
-        return new_token.value
+        return self._serializer.dumps(user.id)
 
-    def validate_token(self, user, token_hex):
-        self._purge_old_tokens()
-        possible_tokens = user.tokens
-        for token in possible_tokens:
-            if hmac.compare_digest(bytes(token_hex), bytes(token.value)):
-                return True
-        return False
+    def validate_token(self, token):
+        try:
+            user_id = self._serializer.loads(token)
+        except (SignatureExpired, BadSignature):
+            return None
+        return self._session.query(User).get(user_id)
 
     def get_user_count(self):
         return self._session.query(User.id).count()
-
-    def _purge_old_tokens(self):
-        current_time = datetime.datetime.utcnow()
-        one_week_ago = current_time - datetime.timedelta(weeks=1)
-        self._session.query(Token).filter(
-            Token.created_on < one_week_ago).delete()
-        self._session.commit()
