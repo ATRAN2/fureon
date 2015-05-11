@@ -14,8 +14,10 @@ setup(name = 'fureon',
     install_requires = [
         'tornado',
         'sqlalchemy',
+        'sqlalchemy_utils',
         'mutagen',
         'redis',
+        'passlib',
         'psycopg2',
     ],
     entry_points = {
