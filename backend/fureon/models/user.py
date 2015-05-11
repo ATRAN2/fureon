@@ -70,6 +70,10 @@ class UserManager(ModelManager):
         self._session.add(new_user)
         self._session.commit()
         return new_user
+
+    def auth_user(self, username, password):
+        user = self.find_by_username(username)
+        return user is not None and user.password == password
     
     def find_by_username(self, username):
         try:
@@ -91,5 +95,20 @@ class UserManager(ModelManager):
         self._session.commit()
         return new_token.value
 
+    def validate_token(self, user, token_hex):
+        self._purge_old_tokens()
+        possible_tokens = user.tokens
+        for token in possible_tokens:
+            if hmac.compare_digest(bytes(token_hex), bytes(token.value)):
+                return True
+        return False
+
     def get_user_count(self):
         return self._session.query(User.id).count()
+
+    def _purge_old_tokens(self):
+        current_time = datetime.datetime.utcnow()
+        one_week_ago = current_time - datetime.timedelta(weeks=1)
+        self._session.query(Token).filter(
+            Token.created_on < one_week_ago).delete()
+        self._session.commit()

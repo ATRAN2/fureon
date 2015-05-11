@@ -119,13 +119,18 @@ class TestUserModel(object):
                                             "other_email@email.com")
         assert 2 == self.user_manager.get_user_count()
 
+    def test_auth_user(self):
+        assert self.user_manager.auth_user("test_username", "test_password") is True
+        assert self.user_manager.auth_user("bad", "test_password") is False
+        assert self.user_manager.auth_user("test_username", "bad") is False
+
     @mock.patch('fureon.models.user.hmac.new', wraps=hmac.new)
     def test_generate_token(self, hmac_new):
         test_user = self.user_manager.find_by_username("test_username")
 
         self.user_manager.generate_token(test_user)
         test_user_token = self.user_manager._session.query(user.Token).one()
-        
+
         assert test_user.tokens[0] == test_user_token
 
         hmac_new.assert_called_once_with(SECRET_KEY,
@@ -133,3 +138,11 @@ class TestUserModel(object):
                                          str(test_user_token.created_on),
                                          sha256)
 
+    def test_validate_token(self):
+        test_user = self.user_manager.find_by_username("test_username")
+        other_user = self.user_manager.register_user("other_username", "pass")
+        token = self.user_manager.generate_token(test_user)
+
+        assert self.user_manager.validate_token(test_user, token) is True
+        assert self.user_manager.validate_token(other_user, token) is False
+        assert self.user_manager.validate_token(test_user, "nope") is False
