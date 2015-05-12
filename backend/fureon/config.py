@@ -9,39 +9,39 @@ SECRET_KEY = os.urandom(64) # change this to a long, randomly-generated string i
 
 # Set paths and database parameters prior to use
 paths = {
-    'song_directory' : '',
-    'static_folder_path' : '',
-    'static_uri' : '',
-    'stream_endpoint' : '',
-    'log_file' : os.path.join(PARENT_DIRECTORY, 'fureon.log')
+    'song_directory': '',
+    'static_folder_path': '',
+    'static_uri': '',
+    'stream_endpoint': '',
+    'log_file': os.path.join(PARENT_DIRECTORY, 'fureon.log')
 }
 
 database = {
-    'drivername' : '',
-    'host' : '',
-    'port' : '',
-    'username' : '',
-    'password' : '',
-    'database' : '',
+    'drivername': '',
+    'host': '',
+    'port': '',
+    'username': '',
+    'password': '',
+    'database': '',
 }
 
 # Redis cache connection parameters
 cache = {
-    'host' : 'localhost',
-    'port' : 6379,
+    'host': 'localhost',
+    'port': 6379,
 }
 
 # Request cooldown in minutes
 stream_options = {
-    'song_request_cooldown' : 60,
-    'playlist_size' : 20
+    'song_request_cooldown': 60,
+    'playlist_size': 20
 }
 
 # Set log verbosity. Verbosity in ascending order:
 # CRITICAL, ERROR, WARNING, INFO, DEBUG
 logs = {
-    'console_verbosity' : 'ERROR',
-    'log_file_verbosity' : 'INFO',
+    'console_verbosity': 'ERROR',
+    'log_file_verbosity': 'INFO',
 }
 
 # IPs that can continuously add requests to songs

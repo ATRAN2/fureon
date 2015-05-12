@@ -17,16 +17,16 @@ class TestPlaylist(object):
             playlist_manager.add_song_by_id(1)
             playlist_manager.add_song_by_id(2, True)
         expected_row_1 = {
-            'id' : 1,
-            'song_id' : 1,
-            'user_requested' : False,
-            'currently_playing' : False
+            'id': 1,
+            'song_id': 1,
+            'user_requested': False,
+            'currently_playing': False
         }
         expected_row_2 = {
-            'id' : 2,
-            'song_id' : 2,
-            'user_requested' : True,
-            'currently_playing' : False
+            'id': 2,
+            'song_id': 2,
+            'user_requested': True,
+            'currently_playing': False
         }
         with db_operations.session_scope() as session:
             playlist_manager = stream_playlist.PlaylistManager(session)
@@ -77,8 +77,8 @@ class TestPlaylist(object):
         expected_requested_state = [True, True, False, False]
         for ii in range(len(expected_song_ids)):
             expected_playlist[unicode(ii)] = {
-                'song_id' : expected_song_ids[ii],
-                'user_requested' : expected_requested_state[ii]
+                'song_id': expected_song_ids[ii],
+                'user_requested': expected_requested_state[ii]
             }
         assert expected_playlist == ordered_playlist
         
@@ -91,8 +91,8 @@ class TestPlaylist(object):
         expected_requested_state.pop(0)
         for ii in range(len(expected_song_ids)):
             expected_playlist[unicode(ii)] = {
-                'song_id' : expected_song_ids[ii],
-                'user_requested' : expected_requested_state[ii]
+                'song_id': expected_song_ids[ii],
+                'user_requested': expected_requested_state[ii]
             }
         assert expected_playlist == ordered_playlist
 

@@ -34,21 +34,21 @@ class TestSongModel(testing_utils.CustomFileAssertions):
             os.path.join(testing_utils.TEST_TEMP_PATH, 'album-art', '1.jpg')
         art_uri = testing_utils.TEST_STATIC_URI + 'album-art/1.jpg'
         expected_row = {
-            'id' : 1,
-            'title' : u'test_title',
-            'artist' : u'test_artist',
-            'album' : u'test_album',
-            'trackno' : u'1',
-            'date' : u'2014',
-            'genre' : u'test_genre',
-            'duration' : u'184.32',
-            'file_path' : unicode(self.test_song_1_path),
-            'file_uri' : unicode(file_uri),
-            'art_path' : unicode(art_path),
-            'art_uri' : unicode(art_uri),
-            'tags' : None,
-            'play_count' : 0,
-            'fave_count' : 0,
+            'id': 1,
+            'title': u'test_title',
+            'artist': u'test_artist',
+            'album': u'test_album',
+            'trackno': u'1',
+            'date': u'2014',
+            'genre': u'test_genre',
+            'duration': u'184.32',
+            'file_path': unicode(self.test_song_1_path),
+            'file_uri': unicode(file_uri),
+            'art_path': unicode(art_path),
+            'art_uri': unicode(art_uri),
+            'tags': None,
+            'play_count': 0,
+            'fave_count': 0,
         }
         with db_operations.session_scope() as session:
             song_manager = song.SongManager(session)
@@ -66,14 +66,14 @@ class TestSongModel(testing_utils.CustomFileAssertions):
                 artist_name = 'test_artist'
                 artist_data = song_manager.get_artist_by_name(artist_name)
         expected_artist_data = {
-            u'0' : {
-                'title' : u'test_title',
-                'id' : 1,
-                'trackno' : u'1',
-                'date' : u'2014',
-                'album' : u'test_album',
-                'fave_count' : 0,
-                'play_count' : 0
+            u'0': {
+                'title': u'test_title',
+                'id': 1,
+                'trackno': u'1',
+                'date': u'2014',
+                'album': u'test_album',
+                'fave_count': 0,
+                'play_count': 0
             }
         }
         assert expected_artist_data == artist_data
@@ -87,15 +87,15 @@ class TestSongModel(testing_utils.CustomFileAssertions):
                 album_data = song_manager.get_album_by_name(album_name)
         art_uri = testing_utils.TEST_STATIC_URI + 'album-art/1.jpg'
         expected_album_data = {
-            u'0' : {
-                'title' : u'test_title',
-                'artist' : u'test_artist',
-                'id' : 1,
-                'trackno' : u'1',
-                'date' : u'2014',
-                'art_uri' : unicode(art_uri),
-                'fave_count' : 0,
-                'play_count' : 0
+            u'0': {
+                'title': u'test_title',
+                'artist': u'test_artist',
+                'id': 1,
+                'trackno': u'1',
+                'date': u'2014',
+                'art_uri': unicode(art_uri),
+                'fave_count': 0,
+                'play_count': 0
             }
         }
         assert expected_album_data == album_data

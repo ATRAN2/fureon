@@ -17,10 +17,10 @@ class Playlist(Base):
 class PlaylistManager(ModelManager):
     def add_song_by_id(self, new_song_id, user_requested=False):
         new_playlist_song_data = {
-            'song_id' : new_song_id,
-            'datetime_added' : datetime.datetime.now(),
-            'user_requested' : user_requested,
-            'currently_playing' : False
+            'song_id': new_song_id,
+            'datetime_added': datetime.datetime.now(),
+            'user_requested': user_requested,
+            'currently_playing': False
         }
         new_playlist_song = Playlist(**new_playlist_song_data)
         self._session.add(new_playlist_song)

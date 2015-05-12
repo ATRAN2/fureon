@@ -34,7 +34,7 @@ class ModelManager(object):
         for column in row.__table__.columns:
             dict[column.name] = getattr(row, column.name)
         return dict
-    
+
     def _remove_columns_from_row(self, column_names, row):
         for column_name in column_names:
             row.pop(column_name)

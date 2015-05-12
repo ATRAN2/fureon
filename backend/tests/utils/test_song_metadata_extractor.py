@@ -15,13 +15,13 @@ class TestSongMetadataExtractor(testing_utils.CustomFileAssertions):
 
     def test_extract_metadata_from_mp3(self):
         expected_metadata = {
-            'date' : u'2014',
-            'genre' : u'test_genre',
-            'album' : u'test_album',
-            'title' : u'test_title',
-            'artist' : u'test_artist',
-            'duration' : u'184.32',
-            'trackno' : u'1',
+            'date': u'2014',
+            'genre': u'test_genre',
+            'album': u'test_album',
+            'title': u'test_title',
+            'artist': u'test_artist',
+            'duration': u'184.32',
+            'trackno': u'1',
         }
         song_path = os.path.join(
             testing_utils.TEST_FILES_PATH, 'test_song.mp3'
@@ -32,13 +32,13 @@ class TestSongMetadataExtractor(testing_utils.CustomFileAssertions):
 
     def test_extract_metadata_from_flac(self):
         expected_metadata = {
-            'date' : u'1969',
-            'genre' : u'test_genre2',
-            'album' : u'test_album2',
-            'title' : u'test_title2',
-            'artist' : u'test_artist2',
-            'duration' : u'30.0',
-            'trackno' : u'2',
+            'date': u'1969',
+            'genre': u'test_genre2',
+            'album': u'test_album2',
+            'title': u'test_title2',
+            'artist': u'test_artist2',
+            'duration': u'30.0',
+            'trackno': u'2',
         }
         song_path = os.path.join(
             testing_utils.TEST_FILES_PATH, 'more_songs', 'test_song2.flac'
@@ -49,13 +49,13 @@ class TestSongMetadataExtractor(testing_utils.CustomFileAssertions):
 
     def test_extract_metadata_from_ogg(self):
         expected_metadata = {
-            'date' : u'1980',
-            'genre' : u'test_genre3',
-            'album' : u'test_album3',
-            'title' : u'test_title3',
-            'artist' : u'test_artist3',
-            'duration' : u'25.0006875',
-            'trackno' : u'3',
+            'date': u'1980',
+            'genre': u'test_genre3',
+            'album': u'test_album3',
+            'title': u'test_title3',
+            'artist': u'test_artist3',
+            'duration': u'25.0006875',
+            'trackno': u'3',
         }
         song_path = os.path.join(
             testing_utils.TEST_FILES_PATH, 'more_songs', 'more_songs', 'test_song3.ogg'

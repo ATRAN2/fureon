@@ -76,6 +76,6 @@ class FindArtistByNameHandler(CORSRequestHandler):
 class GetStreamEndpointHandler(CORSRequestHandler):
     def get(self):
         stream_endpoint = {
-            'stream_endpoint' : config.paths['stream_endpoint']
+            'stream_endpoint': config.paths['stream_endpoint']
         }
         self.write(stream_endpoint)

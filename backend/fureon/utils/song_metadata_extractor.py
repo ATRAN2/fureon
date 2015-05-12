@@ -9,20 +9,20 @@ module_logger = logging.getLogger(__name__)
 class SongMetadataExtractor(object):
     SUPPORTED_FILE_TYPES = set(['audio/mp3', 'audio/vorbis', 'audio/x-flac'])
     ID3_TAG_TO_SONG_MODEL_MAP = {
-        'TDRC' : 'date',
-        'TCON' : 'genre',
-        'TALB' : 'album',
-        'TIT2' : 'title',
-        'TPE1' : 'artist',
-        'TRCK' : 'trackno',
+        'TDRC': 'date',
+        'TCON': 'genre',
+        'TALB': 'album',
+        'TIT2': 'title',
+        'TPE1': 'artist',
+        'TRCK': 'trackno',
     }
     VORBISCOMMENTS_TO_SONG_MODEL_MAP = {
-        'date' : 'date',
-        'genre' : 'genre',
-        'album' : 'album',
-        'title' : 'title',
-        'artist' : 'artist',
-        'tracknumber' : 'trackno',
+        'date': 'date',
+        'genre': 'genre',
+        'album': 'album',
+        'title': 'title',
+        'artist': 'artist',
+        'tracknumber': 'trackno',
     }
 
     def __init__(self):

@@ -23,11 +23,11 @@ TEST_SONG_CACHE = create_mock_cache_from_class(cache.SongCache)
 # TEST_USER_CACHE = create_mock_cache_from_class(cache.UserCache)
 
 MOCK_CONFIG_PATHS = {
-    'song_directory' : TEST_FILES_PATH,
-    'static_folder_path' : TEST_TEMP_PATH,
-    'static_uri' : TEST_STATIC_URI,
-    'stream_endpoint' : TEST_STREAM_ENDPOINT,
-    'log_file' : TEST_TEMP_PATH,
+    'song_directory': TEST_FILES_PATH,
+    'static_folder_path': TEST_TEMP_PATH,
+    'static_uri': TEST_STATIC_URI,
+    'stream_endpoint': TEST_STREAM_ENDPOINT,
+    'log_file': TEST_TEMP_PATH,
 }
 
 class CustomFileAssertions(object):

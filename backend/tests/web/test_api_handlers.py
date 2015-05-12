@@ -56,7 +56,7 @@ class TestAPIHandlers(AsyncHTTPTestCase, testing_utils.TestingWithDBBaseClass):
     def test_request_song_by_id(self, mock_song_request):
         song_id = '1'
         url = '/api/request_song'
-        post_data = {'song-id' : song_id}
+        post_data = {'song-id': song_id}
         response = self._post_data_to_url(url, post_data)
         assert response.code == 200
         assert mock_song_request.called
@@ -88,7 +88,7 @@ class TestAPIHandlers(AsyncHTTPTestCase, testing_utils.TestingWithDBBaseClass):
         with mock.patch.object(config, 'request_ip_whitelist', set()):
             song_id = '1'
             url = '/api/request_song'
-            post_data = {'song-id' : song_id}
+            post_data = {'song-id': song_id}
             response = self._post_data_to_url(url, post_data)
             assert response.code == 200
             assert mock_song_request.called
@@ -100,7 +100,7 @@ class TestAPIHandlers(AsyncHTTPTestCase, testing_utils.TestingWithDBBaseClass):
             assert response.code == 200
             json_data = json.loads(response.body)
             expected_data = {
-                'stream_endpoint' : testing_utils.MOCK_CONFIG_PATHS['stream_endpoint']
+                'stream_endpoint': testing_utils.MOCK_CONFIG_PATHS['stream_endpoint']
             }
             assert expected_data == json_data
 
