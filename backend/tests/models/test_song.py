@@ -111,6 +111,7 @@ class TestSongModel(testing_utils.CustomFileAssertions):
                 test_song_paths, expected_song_counts
             )
 
+    @testing_utils.retry_test_n_times(3)
     def test_get_random_song(self):
         test_song_paths = [
             self.test_song_1_path, self.test_song_2_path, self.test_song_3_path

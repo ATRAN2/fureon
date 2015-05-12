@@ -76,3 +76,32 @@ def empty_temp_directory():
             os.unlink(file_path)
         else:
             shutil.rmtree(file_path)
+
+class retry_test_n_times(object):
+    def __init__(self, retry_attempts):
+        self._retry_attempts = retry_attempts
+
+    def __call__(self, func):
+        def wrapped_func(*args, **kwargs):
+            current_attempt_count = 0
+            while True:
+                try:
+                    return_values = func(*args, **kwargs)
+                    break
+                except AssertionError:
+                    current_attempt_count += 1
+                    if current_attempt_count >= self._retry_attempts:
+                        raise
+                    test_class = args[0]
+                    self._run_teardown_and_setup_methods(test_class)
+            return return_values
+        return wrapped_func
+
+    def _run_teardown_and_setup_methods(self, test_class):
+        if hasattr(test_class, 'teardown_method'):
+            teardown_method = getattr(test_class, 'teardown_method')
+            teardown_method(None)
+        if hasattr(test_class, 'setup_method'):
+            setup_method = getattr(test_class, 'setup_method')
+            setup_method(None)
+

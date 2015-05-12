@@ -1,4 +1,5 @@
 import mock
+import time
 
 from fureon import db_operations, config, site_controls
 from fureon.models import stream_playlist, song
@@ -58,6 +59,7 @@ class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
         assert True == mock_add.called
         assert True == mock_crop.called
 
+    @testing_utils.retry_test_n_times(2)
     @mock.patch('fureon.components.stream_watcher.StreamPlayerWatcher.run')
     @mock.patch('fureon.utils.stream_player.StreamPlayer.add')
     @mock.patch('fureon.utils.stream_player.StreamPlayer.crop')
@@ -66,6 +68,7 @@ class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
     def test_initialize_stream(self, mock_update, mock_clear, mock_crop,  mock_add, mock_run):
         with mock.patch.object(config, 'paths', testing_utils.MOCK_CONFIG_PATHS):
             self._stream_controller.initialize_stream()
+        time.sleep(0.2)
         assert True == mock_update.called
         assert True == mock_clear.called
         assert True == mock_crop.called
