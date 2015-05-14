@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class ModelManager(object):
     def __init__(self, session):
         self._session = session

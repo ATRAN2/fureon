@@ -121,7 +121,7 @@ class TestSongModel(testing_utils.CustomFileAssertions):
                 song_manager = song.SongManager(session)
                 for test_song_path in test_song_paths:
                     song_manager.add_song_from_path(test_song_path)
-        song_access_count = {1:0, 2:0, 3:0}
+        song_access_count = {1: 0, 2: 0, 3: 0}
         total_random_queries = 50
         with db_operations.session_scope() as session:
             song_manager = song.SongManager(session)

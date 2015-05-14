@@ -4,6 +4,7 @@ from fureon import db_operations
 from fureon.models import stream_playlist
 from tests import testing_utils
 
+
 class TestPlaylist(object):
     def setup_method(self, method):
         testing_utils.connect_to_temporary_test_db()
@@ -60,7 +61,7 @@ class TestPlaylist(object):
             playlist_manager.set_first_song_as_currently_playing()
         with db_operations.session_scope() as session:
             first_song = session.query(stream_playlist.Playlist).filter_by(id=1).one()
-            assert True == first_song.currently_playing
+            assert first_song.currently_playing is True
 
     def test_get_ordered_playlist_and_pop_first_song(self):
         with db_operations.session_scope() as session:
@@ -81,7 +82,7 @@ class TestPlaylist(object):
                 'user_requested': expected_requested_state[ii]
             }
         assert expected_playlist == ordered_playlist
-        
+
         with db_operations.session_scope() as session:
             playlist_manager = stream_playlist.PlaylistManager(session)
             playlist_manager.pop_first_song()
@@ -95,5 +96,3 @@ class TestPlaylist(object):
                 'user_requested': expected_requested_state[ii]
             }
         assert expected_playlist == ordered_playlist
-
-

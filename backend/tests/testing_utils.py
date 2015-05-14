@@ -14,6 +14,7 @@ TEST_FILES_PATH = os.path.join(config.PARENT_DIRECTORY, 'tests', 'test_files')
 TEST_STATIC_URI = 'http://my.testurl.com/stuff/'
 TEST_STREAM_ENDPOINT = 'http://my.streamendpoint.com:1234/swag.ogg'
 
+
 def create_mock_cache_from_class(cache_class):
     with mock.patch('fureon.utils.cache.redis.StrictRedis', fakeredis.FakeStrictRedis):
         mock_cache = cache_class(host='notahost', port=1234, db=0)
@@ -29,6 +30,7 @@ MOCK_CONFIG_PATHS = {
     'stream_endpoint': TEST_STREAM_ENDPOINT,
     'log_file': TEST_TEMP_PATH,
 }
+
 
 class CustomFileAssertions(object):
     def assertIsImage(self, image_path):
@@ -49,6 +51,7 @@ class CustomFileAssertions(object):
         else:
             return False
 
+
 class TestingWithDBBaseClass(object):
     @classmethod
     def setup_class(cls):
@@ -64,10 +67,12 @@ class TestingWithDBBaseClass(object):
         self._song_cache.flush_db()
         empty_temp_directory()
 
+
 def connect_to_temporary_test_db():
     engine = db_operations.create_in_memory_engine()
     db_operations.create_tables(engine)
     db_operations.bind_session(engine)
+
 
 def empty_temp_directory():
     for file in os.listdir(TEST_TEMP_PATH):
@@ -76,6 +81,7 @@ def empty_temp_directory():
             os.unlink(file_path)
         else:
             shutil.rmtree(file_path)
+
 
 class retry_test_n_times(object):
     def __init__(self, retry_attempts):
@@ -104,4 +110,3 @@ class retry_test_n_times(object):
         if hasattr(test_class, 'setup_method'):
             setup_method = getattr(test_class, 'setup_method')
             setup_method(None)
-

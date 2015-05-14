@@ -23,6 +23,7 @@ class Cache(object):
     def flush_db(self):
         return self._cache.flushdb()
 
+
 class SongCache(Cache):
     def __init__(self, host, port, db=0):
         super(SongCache, self).__init__(host, port, db)
@@ -49,6 +50,7 @@ class SongCache(Cache):
 
     def _get_song_key_from_id(self, song_id):
         return 'song_expiration_ttl_id:{0}'.format(song_id)
+
 
 class UserCache(Cache):
     def __init__(self, host, port, db=1):

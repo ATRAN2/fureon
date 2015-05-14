@@ -9,11 +9,12 @@ from sqlalchemy_utils import PasswordType
 
 from fureon import config
 from fureon.exceptions import (InvalidUsernameError, InvalidEmailError,
-                              DuplicateUsernameError, DuplicateEmailError)
+                               DuplicateUsernameError, DuplicateEmailError)
 from fureon.models.base import Base, ModelManager
 
 
 module_logger = logging.getLogger(__name__)
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -57,7 +58,7 @@ class UserManager(ModelManager):
     def auth_user(self, username, password):
         user = self.find_by_username(username)
         return user is not None and user.password == password
-    
+
     def find_by_username(self, username):
         try:
             return self._session.query(User).filter_by(username=username).one()

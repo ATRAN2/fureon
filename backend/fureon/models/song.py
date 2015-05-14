@@ -16,6 +16,7 @@ from fureon.models.base import Base, ModelManager
 
 module_logger = logging.getLogger(__name__)
 
+
 class Song(Base):
     __tablename__ = 'song'
 
@@ -35,6 +36,7 @@ class Song(Base):
     tags = Column('tags', String, nullable=True)
     play_count = Column('play_count', Integer, default=0)
     fave_count = Column('fave_count', Integer, default=0)
+
 
 class SongManager(ModelManager):
     def add_song_from_path(self, song_path):
@@ -91,7 +93,7 @@ class SongManager(ModelManager):
     def get_random_song(self):
         song_count = self.get_song_count()
         random_row_number = random.randint(0, song_count-1)
-        return self._session.query(Song).slice(random_row_number,random_row_number+1).one()
+        return self._session.query(Song).slice(random_row_number, random_row_number+1).one()
 
     def _save_album_art_to_file(self, picture_data, art_path):
         art_directory = os.path.dirname(art_path)
@@ -121,9 +123,9 @@ class SongManager(ModelManager):
 
     def _create_and_return_song_uri_link(self, song_id, song_path):
         song_extension = os.path.splitext(song_path)[1]
-        link_path = os.path.join( config.paths['static_folder_path'], 'music',
-            '{0}{1}'.format(song_id, song_extension)
-        )
+        link_path = os.path.join(config.paths['static_folder_path'], 'music',
+                                 '{0}{1}'.format(song_id, song_extension)
+                                 )
         link_directory = os.path.dirname(link_path)
         self._create_directory(link_directory)
         self._create_sym_link(song_path, link_path)

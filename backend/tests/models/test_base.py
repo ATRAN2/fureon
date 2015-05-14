@@ -8,10 +8,10 @@ class TestModelManager(object):
 
     def setup_method(self, method):
         self._test_list = [
-                {1 : 1, 'y': 'y', 'z' : 'z'},
-                {2 : 2, 'y': 'y', 'z' : 'z'},
-                {3 : 3, 'y': 'y', 'z' : 'z'},
-                {4 : 4, 'y': 'y', 'z' : 'z'}
+                {1: 1, 'y': 'y', 'z': 'z'},
+                {2: 2, 'y': 'y', 'z': 'z'},
+                {3: 3, 'y': 'y', 'z': 'z'},
+                {4: 4, 'y': 'y', 'z': 'z'}
         ]
 
     def test_format_list_to_numbered_dict(self):
@@ -28,10 +28,10 @@ class TestModelManager(object):
 
     def test_remove_columns_from_query_rows_with_list(self):
         expected_result = [
-            {1 : 1},
-            {2 : 2},
-            {3 : 3},
-            {4 : 4}
+            {1: 1},
+            {2: 2},
+            {3: 3},
+            {4: 4}
         ]
         assert expected_result != self._test_list
         self._model_manager\
@@ -40,10 +40,10 @@ class TestModelManager(object):
 
     def test_remove_columns_from_query_rows_with_dict(self):
         expected_result = {
-            u'0': {1 : 1},
-            u'1': {2 : 2},
-            u'2': {3 : 3},
-            u'3': {4 : 4}
+            u'0': {1: 1},
+            u'1': {2: 2},
+            u'2': {3: 3},
+            u'3': {4: 4}
         }
         test_list_as_dict = self._model_manager\
             .format_list_to_numbered_dict(self._test_list)
@@ -51,5 +51,3 @@ class TestModelManager(object):
         self._model_manager\
             .remove_columns_from_query_rows(['y', 'z'], test_list_as_dict)
         assert expected_result == test_list_as_dict
-
-

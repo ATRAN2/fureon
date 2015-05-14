@@ -94,6 +94,7 @@ class MainStreamControls(object):
                 attempts += 1
         return random_song
 
+
 class DatabaseControls(object):
     SUPPORTED_FILE_TYPES = ('.mp3', '.ogg', '.flac')
 
@@ -112,4 +113,3 @@ class DatabaseControls(object):
                         song_manager.add_song_from_path(song_path)
                     except DuplicateEntryError:
                         pass
-

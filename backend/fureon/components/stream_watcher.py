@@ -24,5 +24,3 @@ class StreamPlayerWatcher(threading.Thread, SingletonMixin):
                     self._tornado_ioloop_callback(
                         self._stream_controller.transition_to_next_song
                     )
-
-
