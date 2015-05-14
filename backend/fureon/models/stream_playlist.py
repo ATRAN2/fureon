@@ -14,6 +14,7 @@ class Playlist(Base):
     user_requested = Column('user_requested', Boolean)
     currently_playing = Column('currently_playing', Boolean)
 
+
 class PlaylistManager(ModelManager):
     def add_song_by_id(self, new_song_id, user_requested=False):
         new_playlist_song_data = {
@@ -58,17 +59,16 @@ class PlaylistManager(ModelManager):
 
     def _get_ordered_playlist_query(self):
         playlist = self._get_playlist()
-        current_song = filter(lambda x: x.currently_playing == True, playlist)
+        current_song = filter(lambda x: x.currently_playing is True, playlist)
         if current_song:
             current_song_index = playlist.index(current_song[0])
             playlist.pop(current_song_index)
-        requested_songs = filter(lambda x: x.user_requested == True, playlist)
+        requested_songs = filter(lambda x: x.user_requested is True, playlist)
         requested_songs.sort(key=lambda x: x.datetime_added)
-        unrequested_songs = filter(lambda x: x.user_requested == False, playlist)
+        unrequested_songs = filter(lambda x: x.user_requested is False, playlist)
         unrequested_songs.sort(key=lambda x: x.datetime_added)
         ordered_playlist_query = current_song + requested_songs + unrequested_songs
         return ordered_playlist_query
 
     def _get_playlist(self):
         return self._session.query(Playlist).all()
-

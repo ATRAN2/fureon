@@ -10,4 +10,3 @@ class invalidate_cached_playlist(object):
                 cache.flush_playlist()
             return return_values
         return wrapped_func
-

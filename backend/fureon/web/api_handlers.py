@@ -6,14 +6,17 @@ from fureon import db_operations, constants, config
 from fureon.models import stream_playlist, song
 from fureon.components.cache_instances import song_cache
 
+
 class CORSRequestHandler(RequestHandler):
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
+
 
 class APIRootHandler(CORSRequestHandler):
     def get(self):
         endpoints = constants.ENDPOINT_DESCRIPTIONS
         self.write(endpoints)
+
 
 class PlaylistSongsHandler(CORSRequestHandler):
     def get(self):
@@ -35,6 +38,7 @@ class PlaylistSongsHandler(CORSRequestHandler):
         for field in field_data_to_add:
             playlist_data[field] = song[field]
 
+
 class FindSongByIDHandler(CORSRequestHandler):
     def get(self):
         song_id = self.request.arguments['song-id'][0]
@@ -44,6 +48,7 @@ class FindSongByIDHandler(CORSRequestHandler):
             song_data['datetime_added'] = \
                 song_data['datetime_added'].strftime(config.TIME_FORMAT)
         self.write(song_data)
+
 
 class RequestSongByIDHandler(CORSRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -57,6 +62,7 @@ class RequestSongByIDHandler(CORSRequestHandler):
             song_id, user_requested=True
         )
 
+
 class FindAlbumByNameHandler(CORSRequestHandler):
     def get(self):
         album_name = self.request.arguments['name'][0]
@@ -65,6 +71,7 @@ class FindAlbumByNameHandler(CORSRequestHandler):
             album_data = song_manager.get_album_by_name(album_name)
         self.write(album_data)
 
+
 class FindArtistByNameHandler(CORSRequestHandler):
     def get(self):
         artist_name = self.request.arguments['name'][0]
@@ -72,6 +79,7 @@ class FindArtistByNameHandler(CORSRequestHandler):
             song_manager = song.SongManager(session)
             artist_name = song_manager.get_artist_by_name(artist_name)
         self.write(artist_name)
+
 
 class GetStreamEndpointHandler(CORSRequestHandler):
     def get(self):

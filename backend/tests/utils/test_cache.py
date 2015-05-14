@@ -18,21 +18,21 @@ class TestCache(object):
         self._cache.set_key_value('1', '2')
         assert '2' == self._cache.get_key_value('1')
         self._cache.delete_key_value('1')
-        assert None == self._cache.get_key_value('1')
+        assert self._cache.get_key_value('1') is None
 
     def test_flushdb(self):
         test_keys = ['1', '2', '3', '4', '5']
         test_values = ['10', '20', '30', '40', '50']
         map(self._cache.set_key_value, test_keys, test_values)
         assert all(
-            value == self._cache.get_key_value(key) \
+            value == self._cache.get_key_value(key)
             for key, value in zip(test_keys, test_values)
         )
 
         test_values = [None for value in range(len(test_values))]
         self._cache.flush_db()
         assert all(
-            value == self._cache.get_key_value(key) \
+            value == self._cache.get_key_value(key)
             for key, value in zip(test_keys, test_values)
         )
 
@@ -41,12 +41,13 @@ class TestCache(object):
         self._cache.set_key_value_with_expiration('1', '2', '10')
         assert '2' == self._cache.get_key_value('1')
         self._cache.delete_key_value('1')
-        assert None == self._cache.get_key_value('1')
+        assert self._cache.get_key_value('1') is None
         self._cache.set_key_value_with_expiration('1', '2', 1)
         assert '2' == self._cache.get_key_value('1')
         assert 1L == self._cache.check_ttl('1')
         time.sleep(1.2)
-        assert None == self._cache.get_key_value('1')
+        assert self._cache.get_key_value('1') is None
+
 
 class TestSongCache(object):
     @classmethod
@@ -74,5 +75,3 @@ class TestSongCache(object):
             test_song_ids, test_ttls
         )
         assert len(test_song_ids) == self._cache.get_total_number_of_blocked_songs()
-
-

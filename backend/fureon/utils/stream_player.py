@@ -45,4 +45,3 @@ class StreamPlayer(object):
 
     def _get_relative_mpd_song_path(self, absolute_song_path):
         return os.path.relpath(absolute_song_path, config.paths['song_directory'])
-

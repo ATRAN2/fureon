@@ -106,8 +106,8 @@ class TestAPIHandlers(AsyncHTTPTestCase, testing_utils.TestingWithDBBaseClass):
 
     def _post_data_to_url(self, url, post_data):
         self.http_client.fetch(self.get_url(url), self.stop,
-            method='POST', body=urlencode(post_data)
-        )
+                               method='POST', body=urlencode(post_data)
+                               )
         return self.wait()
 
     def _fetch_response_data_from_url(self, url):

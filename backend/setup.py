@@ -2,16 +2,17 @@
 
 from setuptools import setup, find_packages
 
-setup(name = 'fureon',
-    version = '0.0',
-    description = 'Crowd enabled music streamer and library',
+setup(
+    name='fureon',
+    version='0.0',
+    description='Crowd enabled music streamer and library',
     author='Andy Tran',
-    author_email = 'andy@atran.net',
-    url = '',
-    packages = find_packages(),
-    include_package_data = True,
-    zip_safe = False,
-    install_requires = [
+    author_email='andy@atran.net',
+    url='',
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=[
         'tornado',
         'sqlalchemy',
         'sqlalchemy_utils',
@@ -21,11 +22,9 @@ setup(name = 'fureon',
         'psycopg2',
         'itsdangerous',
     ],
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'fureon-start = fureon.app:main',
         ]
     }
 )
-
-

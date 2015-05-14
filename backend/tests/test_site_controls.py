@@ -14,7 +14,7 @@ class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
             with db_operations.session_scope() as session:
                 song_manager = song.SongManager(session)
                 assert 3 == song_manager.get_song_count()
-        assert True == mock_stream_player_update.called
+        assert mock_stream_player_update.called
 
     def test_add_song_with_user_request_to_playlist(self):
         with db_operations.session_scope() as session:
@@ -29,9 +29,9 @@ class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
             assert 2 == session.query(stream_playlist.Playlist.id).count()
 
             first_song = session.query(stream_playlist.Playlist).filter_by(id=1).one()
-            assert False == first_song.user_requested
+            assert first_song.user_requested is False
             second_song = session.query(stream_playlist.Playlist).filter_by(id=2).one()
-            assert True == second_song.user_requested
+            assert second_song.user_requested is True
 
     def test_add_random_song_with_user_request_to_playlist(self):
         self._stream_controller.add_random_song_with_user_request_to_playlist()
@@ -56,8 +56,8 @@ class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
             after_playlist = playlist_manager.get_ordered_playlist()
             assert prev_playlist != after_playlist
             self._stream_controller.transition_to_next_song()
-        assert True == mock_add.called
-        assert True == mock_crop.called
+        assert mock_add.called
+        assert mock_crop.called
 
     @testing_utils.retry_test_n_times(2)
     @mock.patch('fureon.components.stream_watcher.StreamPlayerWatcher.run')
@@ -69,16 +69,17 @@ class TestMainStreamControls(testing_utils.TestingWithDBBaseClass):
         with mock.patch.object(config, 'paths', testing_utils.MOCK_CONFIG_PATHS):
             self._stream_controller.initialize_stream()
         time.sleep(0.2)
-        assert True == mock_update.called
-        assert True == mock_clear.called
-        assert True == mock_crop.called
-        assert True == mock_add.called
-        assert True == mock_run.called
+        assert mock_update.called
+        assert mock_clear.called
+        assert mock_crop.called
+        assert mock_add.called
+        assert mock_run.called
 #
 #    @mock.patch('fureon.utils.stream_player.StreamPlayer.play')
 #    def test_run_stream(self, mock_play):
 #        self._stream_controller.run_stream()
 #        assert True == mock_play.called
+
 
 class TestDatabaseControls(object):
     @classmethod
@@ -97,4 +98,3 @@ class TestDatabaseControls(object):
         with db_operations.session_scope() as session:
             all_songs = session.query(song.Song).all()
             assert 3 == len(all_songs)
-

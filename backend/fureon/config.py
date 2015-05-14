@@ -5,7 +5,9 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIRECTORY = os.path.normpath(APP_ROOT + os.sep + os.pardir)
 TIME_FORMAT = '%Y-%m-%d %H-%M-%S'
 
-SECRET_KEY = os.urandom(64) # change this to a long, randomly-generated string if you want to be able to persist user tokens across server restarts
+# If you want to be able to validate user tokens across server restarts, you
+# should set SECRET_KEY with a long, randomly generated string
+SECRET_KEY = os.urandom(64)
 
 # Set paths and database parameters prior to use
 paths = {

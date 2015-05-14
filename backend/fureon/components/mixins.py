@@ -15,4 +15,3 @@ class SingletonMixin(object):
                 if not cls.__singleton_instance:
                     cls.__singleton_instance = cls(*args, **kwargs)
         return cls.__singleton_instance
-

@@ -20,6 +20,7 @@ api_endpoints = [
     (r'/api/stream_endpoint', api_handlers.GetStreamEndpointHandler),
 ]
 
+
 def main():
     parse_command_line()
     app = tornado.web.Application(
@@ -37,4 +38,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
