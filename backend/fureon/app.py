@@ -18,6 +18,8 @@ api_endpoints = [
     (r'/api/album/find', api_handlers.FindAlbumByNameHandler),
     (r'/api/artist/find', api_handlers.FindArtistByNameHandler),
     (r'/api/stream_endpoint', api_handlers.GetStreamEndpointHandler),
+    (r'/users/?', api_handlers.UserRegistrationHandler),
+    (r'/users/login/?', api_handlers.UserLoginHandler),
 ]
 
 

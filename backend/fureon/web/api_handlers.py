@@ -3,8 +3,10 @@ import json
 from tornado.web import RequestHandler
 
 from fureon import db_operations, constants, config
-from fureon.models import stream_playlist, song
+from fureon.models import stream_playlist, song, user
 from fureon.components.cache_instances import song_cache
+from fureon.exceptions import (InvalidUsernameError, InvalidEmailError,
+                               DuplicateUsernameError, DuplicateEmailError)
 
 
 class CORSRequestHandler(RequestHandler):
@@ -87,3 +89,60 @@ class GetStreamEndpointHandler(CORSRequestHandler):
             'stream_endpoint': config.paths['stream_endpoint']
         }
         self.write(stream_endpoint)
+
+
+class UserRegistrationHandler(CORSRequestHandler):
+    def post(self):
+        username = self.get_argument('username')
+        password = self.get_argument('password')
+        email = self.get_argument('email', default=None)
+
+        with db_operations.session_scope() as session:
+            user_manager = user.UserManager(session)
+
+        try:
+            user_manager.register_user(username, password, email)
+            response = {'status': 'success', 'data': 'user was created'}
+        except DuplicateUsernameError:
+            self.set_status(409)
+            response = {'status': 'fail',
+                        'data': {'username': 'username already taken'}
+                        }
+        except DuplicateEmailError:
+            self.set_status(409)
+            response = {'status': 'fail',
+                        'data': {'email': 'email already registered'}
+                        }
+        except InvalidUsernameError:
+            self.set_status(400)
+            response = {'status': 'fail',
+                        'data': {'username': 'invalid username'}
+                        }
+        except InvalidEmailError:
+            self.set_status(400)
+            response = {'status': 'fail',
+                        'data': {'email': 'invalid email'}
+                        }
+        self.write(response)
+
+
+class UserLoginHandler(CORSRequestHandler):
+    def post(self):
+        username = self.get_argument('username')
+        password = self.get_argument('password')
+
+        with db_operations.session_scope() as session:
+            user_manager = user.UserManager(session)
+
+        if not user_manager.auth_user(username, password):
+            self.set_status(401)
+            response = {'status': 'fail',
+                        'data': {'password': 'bad username or password'}
+                        }
+        else:
+            authed_user = user_manager.find_by_username(username)
+            token = user_manager.generate_token(authed_user)
+            response = {'status': 'success',
+                        'data': {'token': token}
+                        }
+        self.write(response)

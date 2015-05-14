@@ -6,7 +6,7 @@ import tornado
 from tornado.testing import AsyncHTTPTestCase
 
 from fureon import db_operations, constants, config
-from fureon.models import song
+from fureon.models import song, user
 from fureon.app import api_endpoints
 from tests import testing_utils
 
@@ -103,6 +103,70 @@ class TestAPIHandlers(AsyncHTTPTestCase, testing_utils.TestingWithDBBaseClass):
                 'stream_endpoint': testing_utils.MOCK_CONFIG_PATHS['stream_endpoint']
             }
             assert expected_data == json_data
+
+    def test_register_user(self):
+        with db_operations.session_scope() as session:
+            user_manager = user.UserManager(session)
+        assert user_manager.get_user_count() == 0
+
+        # happy path
+        url = '/users'
+        post_data = {'username': 'user1', 'password': 'test_password'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 200
+        assert user_manager.get_user_count() == 1
+
+        post_data = {'username': 'user2', 'password': '12', 'email': 'e@e.com'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 200
+        assert user_manager.get_user_count() == 2
+
+        # sad paths
+        post_data = {'username': 'user2', 'password': '123456'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 409
+        assert 'name already taken' in response.body
+
+        post_data = {'username': 'user3', 'password': '13', 'email': 'e@e.com'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 409
+        assert 'email already registered' in response.body
+
+        post_data = {'username': 'bad *#@$@ name', 'password': '12345'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 400
+        assert 'invalid username' in response.body
+
+        post_data = {'username': 'user4', 'password': '123', 'email': 'badlol'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 400
+        assert 'invalid email' in response.body
+
+        assert user_manager.get_user_count() == 2
+
+    def test_auth_user(self):
+        with db_operations.session_scope() as session:
+            session.add(user.User('t_username', 't_password'))
+            session.commit()
+
+        url = '/users/login'
+        # happy path
+        post_data = {'username': 't_username', 'password': 't_password'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 200
+        json_data = json.loads(response.body)
+        assert 'token' in json_data['data']
+
+        # sad paths
+        post_data = {'username': 'bad_username', 'password': 't_password'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 401
+        assert 'bad username or password' in response.body
+
+        post_data = {'username': 't_username', 'password': 'bad_password'}
+        response = self._post_data_to_url(url, post_data)
+        assert response.code == 401
+        assert 'bad username or password' in response.body
 
     def _post_data_to_url(self, url, post_data):
         self.http_client.fetch(self.get_url(url), self.stop,
